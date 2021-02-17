@@ -53,7 +53,6 @@ public class ChunkManager {
             IridiumChunkBusters.getInstance().getNms().sendChunk(c, c.getWorld().getPlayers());
             return;
         }
-        Bukkit.getScheduler().scheduleSyncDelayedTask(IridiumChunkBusters.getInstance(), () -> {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().actionBarMessage.replace("{ylevel}", String.valueOf(y)))));
             int cx = c.getX() << 4;
             int cz = c.getZ() << 4;
@@ -84,8 +83,12 @@ public class ChunkManager {
                 }
             }
             IridiumChunkBusters.getInstance().getNms().sendChunk(c, changedBlocks, c.getWorld().getPlayers());
-            deleteChunk(c, chunkSnapshot, tileEntities, player, y - 1);
-        }, IridiumChunkBusters.getInstance().getConfiguration().deleteInteval);
+
+            if(IridiumChunkBusters.getInstance().getConfiguration().deleteInteval<1){
+                deleteChunk(c, chunkSnapshot, tileEntities, player, y - 1);
+            }else{
+                Bukkit.getScheduler().runTaskLater(IridiumChunkBusters.getInstance(), () -> deleteChunk(c, chunkSnapshot, tileEntities, player, y - 1), IridiumChunkBusters.getInstance().getConfiguration().deleteInteval);
+            }
     }
 
 }
