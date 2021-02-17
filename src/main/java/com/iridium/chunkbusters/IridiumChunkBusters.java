@@ -66,7 +66,6 @@ public class IridiumChunkBusters extends DependencyPlugin {
         getDataFolder().mkdir();
         instance = this;
         this.persist = new Persist(Persist.PersistType.YAML);
-        super.onEnable();
         this.commandManager = new CommandManager("chunkbusters");
         loadConfigs();
         saveConfigs();
@@ -93,7 +92,6 @@ public class IridiumChunkBusters extends DependencyPlugin {
 
     @Override
     protected void disable() {
-        super.onDisable();
         activeChunkBusters.forEach(chunkBuster -> databaseManager.saveChunkBuster(chunkBuster));
         getLogger().info("-------------------------------");
         getLogger().info("");
