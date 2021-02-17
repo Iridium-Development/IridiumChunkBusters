@@ -12,4 +12,5 @@ public class Messages {
     public String nextPage = ">>";
     public String helpPageHoverMessage = "Click to go to page %page%";
     public String mustBeANumber = "%prefix% &7That argument was not a number";
+    public String unknownPlayer = "%prefix% &7Unknwon player.";
 }
