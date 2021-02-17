@@ -1,5 +1,9 @@
 package com.iridium.chunkbusters;
 
+import com.heretere.hdl.dependency.builder.DependencyProvider;
+import com.heretere.hdl.dependency.maven.MavenDependencyInfo;
+import com.heretere.hdl.dependency.maven.annotation.MavenDependency;
+import com.heretere.hdl.dependency.maven.builder.MavenDependencyProviderBuilder;
 import com.iridium.chunkbusters.commands.CommandManager;
 import com.iridium.chunkbusters.configs.Configuration;
 import com.iridium.chunkbusters.configs.Messages;
@@ -24,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@MavenDependency("com|fasterxml|jackson|core:jackson-databind:2.12.1")
+
 @Getter
 public class IridiumChunkBusters extends JavaPlugin {
 
@@ -45,6 +51,7 @@ public class IridiumChunkBusters extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        DependencyProvider<MavenDependencyInfo> provider = MavenDependencyProviderBuilder.builder().dependency("com|fasterxml|jackson|core", "jackson-databind", "2.12.1").build();
         try {
             nms = (NMS) Class.forName("com.iridium.chunkbusters.nms." + Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3]).newInstance();
         } catch (ClassNotFoundException e) {
