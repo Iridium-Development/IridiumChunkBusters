@@ -51,7 +51,7 @@ public class LogsGUI implements InventoryHolder {
                     String chunk = chunkBuster.getChunk().getWorld().getName() + " " + chunkBuster.getChunk().getX() + "," + chunkBuster.getChunk().getZ();
                     inventory.setItem(slot, ItemStackUtils.makeItem(IridiumChunkBusters.getInstance().getConfiguration().chunkBusterLog, Arrays.asList(
                             new Placeholder("player", player.getName()),
-                            new Placeholder("radius", String.valueOf(chunkBuster.getRadius())),
+                            new Placeholder("size", String.valueOf(chunkBuster.getRadius()*2-1)),
                             new Placeholder("time", chunkBuster.getTime().format(DateTimeFormatter.ofPattern(IridiumChunkBusters.getInstance().getConfiguration().dateTimeFormat))),
                             new Placeholder("chunk", chunk)
                     )));
