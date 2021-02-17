@@ -2,10 +2,9 @@ package com.iridium.chunkbusters.nms;
 
 import com.iridium.chunkbusters.IridiumChunkBusters;
 import net.minecraft.server.v1_16_R3.*;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.shorts.ShortArraySet;
 import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.shorts.ShortSet;
 import org.bukkit.craftbukkit.v1_16_R3.CraftChunk;
@@ -62,5 +61,12 @@ public class v1_16_R3 implements NMS {
             net.minecraft.server.v1_16_R3.PacketPlayOutMapChunk packetPlayOutMapChunk = new net.minecraft.server.v1_16_R3.PacketPlayOutMapChunk(((org.bukkit.craftbukkit.v1_16_R3.CraftChunk) chunk).getHandle(), 65535);
             ((org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer) player).getHandle().playerConnection.sendPacket(packetPlayOutMapChunk);
         }));
+    }
+
+    @Override
+    public void sendActionBar(Player player, String message) {
+        IChatBaseComponent iChatBaseComponent = IChatBaseComponent.ChatSerializer.a(ChatColor.translateAlternateColorCodes('&', "{\"text\":\"" + message + "\"}"));
+        PacketPlayOutTitle packetPlayOutTitle = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.ACTIONBAR, iChatBaseComponent, 0, 20, 0);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packetPlayOutTitle);
     }
 }

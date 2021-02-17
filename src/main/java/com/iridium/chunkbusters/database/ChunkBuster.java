@@ -7,8 +7,6 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
@@ -25,6 +23,8 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @DatabaseTable(tableName = "chunkbusters")
 public class ChunkBuster {
+
+    private static final boolean NOTLEGACY = XMaterial.supports(12);
 
     @DatabaseField(columnName = "id", generatedId = true, canBeNull = false)
     @NotNull
@@ -45,8 +45,11 @@ public class ChunkBuster {
     @NotNull
     private Long time;
 
-    @DatabaseField(columnName = "ylevel", canBeNull = false)
+    @DatabaseField(columnName = "y_level", canBeNull = false)
     private int y;
+
+    @DatabaseField(columnName = "starting_level", canBeNull = false)
+    private int startingLevel;
 
     public LocalDateTime getTime() {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault());
@@ -64,6 +67,7 @@ public class ChunkBuster {
         this.radius = radius;
         this.time = ZonedDateTime.of(LocalDateTime.now(), ZoneId.systemDefault()).toInstant().toEpochMilli();
         this.y = y;
+        this.startingLevel = y;
     }
 
     public void deleteChunks() {
@@ -85,9 +89,6 @@ public class ChunkBuster {
     private void deleteChunks(final HashMap<Chunk, ChunkSnapshot> chunks) {
         Player player = Bukkit.getPlayer(uuid);
         if (y == 0) {
-            if (player != null) {
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(StringUtils.color("")));
-            }
             for (Chunk c : chunks.keySet()) {
                 IridiumChunkBusters.getInstance().getNms().sendChunk(c, c.getWorld().getPlayers());
             }
@@ -96,7 +97,7 @@ public class ChunkBuster {
             return;
         }
         if (player != null) {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().actionBarMessage.replace("{ylevel}", String.valueOf(y)))));
+            IridiumChunkBusters.getInstance().getNms().sendActionBar(player, StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().actionBarMessage.replace("{ylevel}", String.valueOf(y))));
         }
 
         for (Chunk c : chunks.keySet()) {
@@ -111,8 +112,13 @@ public class ChunkBuster {
 
             for (int x = cx; x < cx + 16; x++) {
                 for (int z = cz; z < cz + 16; z++) {
-                    Material material = chunkSnapshot.getBlockType(x - cx, y, z - cz);
                     Location location = new Location(world, x, y, z);
+                    Material material;
+                    if (NOTLEGACY) {
+                        material = chunkSnapshot.getBlockType(x - cx, y, z - cz);
+                    } else {
+                        material = location.getBlock().getType();
+                    }
                     changedBlocks.add(location);
                     if (!IridiumChunkBusters.getInstance().getConfiguration().blacklist.contains(XMaterial.matchXMaterial(material))) {
                         if (IridiumChunkBusters.getInstance().getSupport().canDelete(player, location)) {

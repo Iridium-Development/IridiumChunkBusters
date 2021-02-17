@@ -61,4 +61,8 @@ public class v1_8_R1 implements NMS {
             ((org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer) player).getHandle().playerConnection.sendPacket(packetPlayOutMapChunk);
         }));
     }
+
+    @Override
+    public void sendActionBar(Player player, String message) {
+    }
 }

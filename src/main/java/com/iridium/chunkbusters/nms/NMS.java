@@ -13,4 +13,6 @@ public interface NMS {
     void sendChunk(Chunk chunk, List<Location> blocks, List<Player> players);
 
     void sendChunk(Chunk chunk, List<Player> players);
+
+    void sendActionBar(Player player, String message);
 }
