@@ -42,7 +42,7 @@ public class LogsGUI implements InventoryHolder {
             inventory.setItem(i, XMaterial.GRAY_STAINED_GLASS_PANE.parseItem());
         }
         IridiumChunkBusters.getInstance().getDatabaseManager().getChunkBusters().thenAccept(list -> {
-            List<ChunkBuster> chunkBusters = list.stream().filter(chunkBuster -> IridiumChunkBusters.getInstance().getSupport().sameFaction(this.uuid, chunkBuster.getUuid())).collect(Collectors.toList());
+            List<ChunkBuster> chunkBusters = list.stream().filter(chunkBuster -> IridiumChunkBusters.getInstance().getSupport().isRelevant(this.uuid, chunkBuster)).collect(Collectors.toList());
             int i = 0;
             int slot = 0;
             for (ChunkBuster chunkBuster : chunkBusters) {

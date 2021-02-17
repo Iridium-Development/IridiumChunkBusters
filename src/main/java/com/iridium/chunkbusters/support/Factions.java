@@ -1,11 +1,13 @@
 package com.iridium.chunkbusters.support;
 
 
+import com.iridium.chunkbusters.database.ChunkBuster;
 import com.massivecraft.factions.entity.BoardColl;
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.MPlayer;
 import com.massivecraft.massivecore.ps.PS;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -20,11 +22,12 @@ public class Factions implements Support {
     }
 
     @Override
-    public boolean sameFaction(UUID uuid, UUID other) {
+    public boolean isRelevant(UUID uuid, ChunkBuster chunkBuster) {
+        Chunk chunk = chunkBuster.getChunk();
         Faction faction = MPlayer.get(uuid).getFaction();
         if (faction == null) {
-            return uuid.equals(other);
+            return uuid.equals(chunkBuster.getUuid());
         }
-        return faction.equals(MPlayer.get(other).getFaction());
+        return BoardColl.get().getFactionAt(PS.valueOf(chunk)).equals(faction);
     }
 }

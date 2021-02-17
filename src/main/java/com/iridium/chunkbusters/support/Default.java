@@ -1,5 +1,6 @@
 package com.iridium.chunkbusters.support;
 
+import com.iridium.chunkbusters.database.ChunkBuster;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -12,7 +13,7 @@ public class Default implements Support {
     }
 
     @Override
-    public boolean sameFaction(UUID uuid, UUID other) {
-        return uuid.equals(other);
+    public boolean isRelevant(UUID uuid, ChunkBuster chunkBuster) {
+        return uuid.equals(chunkBuster.getUuid());
     }
 }
