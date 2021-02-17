@@ -219,16 +219,31 @@
             <version>1.18.16</version>
             <scope>provided</scope>
         </dependency>
+
         <!-- Serialization -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>LATEST</version>
+            <version>2.12.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.12.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.12.1</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
             <version>2.12.1</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Factions Support -->
@@ -269,6 +284,13 @@
             <groupId>com.j256.ormlite</groupId>
             <artifactId>ormlite-jdbc</artifactId>
             <version>5.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.heretere.hdl</groupId>
+            <artifactId>spigot</artifactId>
+            <version>LATEST</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
