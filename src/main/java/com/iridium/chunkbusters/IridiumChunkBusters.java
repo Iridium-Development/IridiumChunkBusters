@@ -1,9 +1,7 @@
 package com.iridium.chunkbusters;
 
-import com.heretere.hdl.dependency.builder.DependencyProvider;
-import com.heretere.hdl.dependency.maven.MavenDependencyInfo;
 import com.heretere.hdl.dependency.maven.annotation.MavenDependency;
-import com.heretere.hdl.dependency.maven.builder.MavenDependencyProviderBuilder;
+import com.heretere.hdl.spigot.DependencyPlugin;
 import com.iridium.chunkbusters.commands.CommandManager;
 import com.iridium.chunkbusters.configs.Configuration;
 import com.iridium.chunkbusters.configs.Messages;
@@ -21,7 +19,6 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,9 +26,11 @@ import java.util.Collections;
 import java.util.List;
 
 @MavenDependency("com|fasterxml|jackson|core:jackson-databind:2.12.1")
-
+@MavenDependency("com|fasterxml|jackson|core:jackson-core:2.12.1")
+@MavenDependency("com|fasterxml|jackson|core:jackson-annotations:2.12.1")
+@MavenDependency("com|fasterxml|jackson|dataformat:jackson-dataformat-yaml:2.12.1")
 @Getter
-public class IridiumChunkBusters extends JavaPlugin {
+public class IridiumChunkBusters extends DependencyPlugin {
 
     private static IridiumChunkBusters instance;
     private Persist persist;
@@ -50,8 +49,7 @@ public class IridiumChunkBusters extends JavaPlugin {
     private List<ChunkBuster> activeChunkBusters = new ArrayList<>();
 
     @Override
-    public void onEnable() {
-        DependencyProvider<MavenDependencyInfo> provider = MavenDependencyProviderBuilder.builder().dependency("com|fasterxml|jackson|core", "jackson-databind", "2.12.1").build();
+    protected void enable() {
         try {
             nms = (NMS) Class.forName("com.iridium.chunkbusters.nms." + Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3]).newInstance();
         } catch (ClassNotFoundException e) {
@@ -94,7 +92,7 @@ public class IridiumChunkBusters extends JavaPlugin {
     }
 
     @Override
-    public void onDisable() {
+    protected void disable() {
         super.onDisable();
         activeChunkBusters.forEach(chunkBuster -> databaseManager.saveChunkBuster(chunkBuster));
         getLogger().info("-------------------------------");
@@ -102,6 +100,10 @@ public class IridiumChunkBusters extends JavaPlugin {
         getLogger().info(getDescription().getName() + " Disabled!");
         getLogger().info("");
         getLogger().info("-------------------------------");
+    }
+
+    @Override
+    public void load() {
     }
 
     public void loadConfigs() {
