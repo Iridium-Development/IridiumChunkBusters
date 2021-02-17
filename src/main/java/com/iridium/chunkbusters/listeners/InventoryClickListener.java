@@ -23,6 +23,7 @@ public class InventoryClickListener implements Listener {
             event.setCancelled(true);
             if (event.getSlot() == 15) {
                 ChunkBuster chunkBuster = new ChunkBuster(event.getWhoClicked().getUniqueId(), confirmationGUI.getLocation().getChunk(), confirmationGUI.getSize(), IridiumChunkBusters.getInstance().getConfiguration().startYWherePlaced ? confirmationGUI.getLocation().getBlockY() : confirmationGUI.getLocation().getWorld().getMaxHeight());
+                confirmationGUI.getLocation().getBlock().setType(Material.AIR, false);
                 chunkBuster.deleteChunks();
                 confirmationGUI.setActivated(true);
                 event.getWhoClicked().closeInventory();
