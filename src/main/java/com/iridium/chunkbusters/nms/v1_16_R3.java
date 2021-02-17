@@ -1,16 +1,19 @@
 package com.iridium.chunkbusters.nms;
 
 import com.iridium.chunkbusters.IridiumChunkBusters;
-import net.minecraft.server.v1_16_R3.BlockPosition;
-import net.minecraft.server.v1_16_R3.ChunkSection;
-import net.minecraft.server.v1_16_R3.IBlockData;
-import net.minecraft.server.v1_16_R3.PacketPlayOutMapChunk;
+import net.minecraft.server.v1_16_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.shorts.ShortArraySet;
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.shorts.ShortSet;
 import org.bukkit.craftbukkit.v1_16_R3.CraftChunk;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
+import org.bukkit.entity.Player;
+
+import java.util.*;
 
 public class v1_16_R3 implements NMS {
 
@@ -30,10 +33,34 @@ public class v1_16_R3 implements NMS {
     }
 
     @Override
-    public void sendChunk(Chunk chunk) {
-        Bukkit.getScheduler().runTaskAsynchronously(IridiumChunkBusters.getInstance(), () -> chunk.getWorld().getPlayers().forEach(player -> {
-            PacketPlayOutMapChunk packetPlayOutMapChunk = new PacketPlayOutMapChunk(((CraftChunk) chunk).getHandle(), 65535);
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packetPlayOutMapChunk);
+    public void sendChunk(Chunk chunk, List<Location> blocks, List<Player> players) {
+        net.minecraft.server.v1_16_R3.Chunk nmsChunk = ((CraftChunk) chunk).getHandle();
+        Map<Integer, Set<Short>> changedBlocks = new HashMap<>();
+
+        for (Location location : blocks) {
+            Set<Short> shortSet = changedBlocks.computeIfAbsent(location.getBlockY() >> 4, i -> new ShortArraySet());
+            shortSet.add((short) ((location.getBlockX() & 15) << 8 | (location.getBlockZ() & 15) << 4 | (location.getBlockY() & 15)));
+        }
+
+        Set<PacketPlayOutMultiBlockChange> packetsToSend = new HashSet<>();
+
+        for (Map.Entry<Integer, Set<Short>> entry : changedBlocks.entrySet()) {
+            PacketPlayOutMultiBlockChange packetPlayOutMultiBlockChange = new PacketPlayOutMultiBlockChange(SectionPosition.a(nmsChunk.getPos(), entry.getKey()), (ShortSet) entry.getValue(), nmsChunk.getSections()
+                    [entry.getKey()], true);
+            packetsToSend.add(packetPlayOutMultiBlockChange);
+        }
+
+        players.forEach(player -> {
+            EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+            packetsToSend.forEach(packet -> entityPlayer.playerConnection.sendPacket(packet));
+        });
+    }
+
+    @Override
+    public void sendChunk(Chunk chunk, List<Player> players) {
+        Bukkit.getScheduler().runTaskAsynchronously(IridiumChunkBusters.getInstance(), () -> players.forEach(player -> {
+            net.minecraft.server.v1_16_R3.PacketPlayOutMapChunk packetPlayOutMapChunk = new net.minecraft.server.v1_16_R3.PacketPlayOutMapChunk(((org.bukkit.craftbukkit.v1_16_R3.CraftChunk) chunk).getHandle(), 65535);
+            ((org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer) player).getHandle().playerConnection.sendPacket(packetPlayOutMapChunk);
         }));
     }
 }

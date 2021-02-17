@@ -9,5 +9,8 @@ import java.util.List;
 
 public interface NMS {
     void setBlockFast(World world, int x, int y, int z, int blockId, byte data, boolean applyPhysics);
-    void sendChunk(Chunk chunk);
+
+    void sendChunk(Chunk chunk, List<Location> blocks, List<Player> players);
+
+    void sendChunk(Chunk chunk, List<Player> players);
 }

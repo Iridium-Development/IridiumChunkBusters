@@ -8,14 +8,16 @@ import com.iridium.chunkbusters.utils.StringUtils;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
+import org.bukkit.*;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ChunkManager {
 
@@ -39,14 +41,16 @@ public class ChunkManager {
         for (int x = cx - radius; x <= cx + radius; x++) {
             for (int z = cz - radius; z <= cz + radius; z++) {
                 Chunk chunk = c.getWorld().getChunkAt(x, z);
-                deleteChunk(chunk, player, y);
+                List<Location> tileEntities = Arrays.stream(chunk.getTileEntities()).map(BlockState::getLocation).collect(Collectors.toList());
+                deleteChunk(chunk, chunk.getChunkSnapshot(), tileEntities, player, y);
             }
         }
     }
 
-    public static void deleteChunk(final Chunk c, Player player, final int y) {
+    public static void deleteChunk(final Chunk c, final ChunkSnapshot chunkSnapshot, final List<Location> tileEntities, Player player, final int y) {
         if (y == 0) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(StringUtils.color("")));
+            IridiumChunkBusters.getInstance().getNms().sendChunk(c, c.getWorld().getPlayers());
             return;
         }
         Bukkit.getScheduler().scheduleSyncDelayedTask(IridiumChunkBusters.getInstance(), () -> {
@@ -54,22 +58,33 @@ public class ChunkManager {
             int cx = c.getX() << 4;
             int cz = c.getZ() << 4;
 
+            List<Location> changedBlocks = new ArrayList<>();
+
+            World world = c.getWorld();
+
             for (int x = cx; x < cx + 16; x++) {
                 for (int z = cz; z < cz + 16; z++) {
-                    Block block = c.getWorld().getBlockAt(x, y, z);
-                    if (!IridiumChunkBusters.getInstance().getConfiguration().blacklist.contains(XMaterial.matchXMaterial(block.getType()))) {
+                    Material material = chunkSnapshot.getBlockType(x - cx, y, z - cz);
+                    Location location = new Location(world, x, y, z);
+                    changedBlocks.add(location);
+                    if (!IridiumChunkBusters.getInstance().getConfiguration().blacklist.contains(XMaterial.matchXMaterial(material))) {
                         boolean allowed = true;
                         for (Support support : IridiumChunkBusters.getInstance().getSupportedPlugins()) {
-                            if (!support.canDelete(player, block)) allowed = false;
+                            if (!support.canDelete(player, location)) allowed = false;
                         }
                         if (allowed) {
-                            IridiumChunkBusters.getInstance().getNms().setBlockFast(c.getWorld(), x, y, z, 0, (byte) 0, false);
+                            if (tileEntities.contains(location)) {
+                                //NMS will throw errors when trying to delete a Tile Entity
+                                location.getBlock().setType(Material.AIR, false);
+                            } else {
+                                IridiumChunkBusters.getInstance().getNms().setBlockFast(c.getWorld(), x, y, z, 0, (byte) 0, false);
+                            }
                         }
                     }
                 }
             }
-            IridiumChunkBusters.getInstance().getNms().sendChunk(c);
-            deleteChunk(c, player, y - 1);
+            IridiumChunkBusters.getInstance().getNms().sendChunk(c, changedBlocks, c.getWorld().getPlayers());
+            deleteChunk(c, chunkSnapshot, tileEntities, player, y - 1);
         }, IridiumChunkBusters.getInstance().getConfiguration().deleteInteval);
     }
 

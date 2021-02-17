@@ -2,14 +2,19 @@ package com.iridium.chunkbusters.nms;
 
 import com.iridium.chunkbusters.IridiumChunkBusters;
 import net.minecraft.server.v1_8_R3.ChunkSection;
+import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.IBlockData;
-import net.minecraft.server.v1_8_R3.PacketPlayOutMapChunk;
+import net.minecraft.server.v1_8_R3.PacketPlayOutMultiBlockChange;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R3.CraftChunk;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.Player;
+
+import java.util.List;
 
 public class v1_8_R3 implements NMS {
     @Override
@@ -27,10 +32,34 @@ public class v1_8_R3 implements NMS {
     }
 
     @Override
-    public void sendChunk(Chunk chunk) {
+    public void sendChunk(Chunk chunk, List<Location> blocks, List<Player> players) {
+        net.minecraft.server.v1_8_R3.Chunk nmsChunk = ((CraftChunk) chunk).getHandle();
+        int blocksAmount = blocks.size();
+        short[] values = new short[blocksAmount];
+
+        Location firstLocation = null;
+
+        int counter = 0;
+        for (Location location : blocks) {
+            if (firstLocation == null)
+                firstLocation = location;
+
+            values[counter++] = (short) ((location.getBlockX() & 15) << 12 | (location.getBlockZ() & 15) << 8 | location.getBlockY());
+        }
+
+        PacketPlayOutMultiBlockChange multiBlockChange = new PacketPlayOutMultiBlockChange(blocksAmount, values, nmsChunk);
+
+        players.forEach(player -> {
+            EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+            entityPlayer.playerConnection.sendPacket(multiBlockChange);
+        });
+    }
+
+    @Override
+    public void sendChunk(Chunk chunk, List<Player> players) {
         Bukkit.getScheduler().runTaskAsynchronously(IridiumChunkBusters.getInstance(), () -> chunk.getWorld().getPlayers().forEach(player -> {
-            PacketPlayOutMapChunk packetPlayOutMapChunk = new PacketPlayOutMapChunk(((CraftChunk) chunk).getHandle(), true, 65535);
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packetPlayOutMapChunk);
+            net.minecraft.server.v1_15_R1.PacketPlayOutMapChunk packetPlayOutMapChunk = new net.minecraft.server.v1_15_R1.PacketPlayOutMapChunk(((org.bukkit.craftbukkit.v1_15_R1.CraftChunk) chunk).getHandle(), 65535);
+            ((org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer) player).getHandle().playerConnection.sendPacket(packetPlayOutMapChunk);
         }));
     }
 }
