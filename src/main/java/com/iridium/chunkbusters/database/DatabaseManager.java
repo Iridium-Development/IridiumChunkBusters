@@ -1,5 +1,6 @@
-package com.iridium.chunkbusters;
+package com.iridium.chunkbusters.database;
 
+import com.iridium.chunkbusters.IridiumChunkBusters;
 import com.iridium.chunkbusters.configs.SQL;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;

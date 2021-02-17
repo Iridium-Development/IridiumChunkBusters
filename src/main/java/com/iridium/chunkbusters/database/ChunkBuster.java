@@ -1,6 +1,7 @@
-package com.iridium.chunkbusters;
+package com.iridium.chunkbusters.database;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.iridium.chunkbusters.IridiumChunkBusters;
 import com.iridium.chunkbusters.utils.StringUtils;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;

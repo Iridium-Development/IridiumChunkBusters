@@ -1,7 +1,7 @@
 package com.iridium.chunkbusters.listeners;
 
-import com.iridium.chunkbusters.ChunkBuster;
 import com.iridium.chunkbusters.IridiumChunkBusters;
+import com.iridium.chunkbusters.database.ChunkBuster;
 import com.iridium.chunkbusters.gui.ConfirmationGUI;
 import com.iridium.chunkbusters.gui.LogsGUI;
 import org.bukkit.Material;

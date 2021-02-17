@@ -4,6 +4,8 @@ import com.iridium.chunkbusters.commands.CommandManager;
 import com.iridium.chunkbusters.configs.Configuration;
 import com.iridium.chunkbusters.configs.Messages;
 import com.iridium.chunkbusters.configs.SQL;
+import com.iridium.chunkbusters.database.ChunkBuster;
+import com.iridium.chunkbusters.database.DatabaseManager;
 import com.iridium.chunkbusters.listeners.BlockPlaceListener;
 import com.iridium.chunkbusters.listeners.InventoryClickListener;
 import com.iridium.chunkbusters.nms.NMS;
