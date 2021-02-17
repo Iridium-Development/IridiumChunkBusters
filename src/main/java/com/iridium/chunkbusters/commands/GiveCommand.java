@@ -1,6 +1,5 @@
 package com.iridium.chunkbusters.commands;
 
-import com.iridium.chunkbusters.ChunkManager;
 import com.iridium.chunkbusters.IridiumChunkBusters;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -30,7 +29,7 @@ public class GiveCommand extends Command {
         Player player = Bukkit.getPlayer(args[1]);
         if (player != null) {
             int amount = Integer.parseInt(args[2]);
-            player.getInventory().addItem(ChunkManager.getChunkBuster(amount));
+            player.getInventory().addItem(IridiumChunkBusters.getInstance().getChunkBuster(amount));
         }
     }
 

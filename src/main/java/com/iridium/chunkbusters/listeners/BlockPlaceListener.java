@@ -1,6 +1,6 @@
 package com.iridium.chunkbusters.listeners;
 
-import com.iridium.chunkbusters.ChunkManager;
+import com.iridium.chunkbusters.IridiumChunkBusters;
 import com.iridium.chunkbusters.gui.ConfirmationGUI;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
@@ -12,7 +12,7 @@ public class BlockPlaceListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockPlaceEvent(BlockPlaceEvent event) {
-        int amount = ChunkManager.getChunkBusterSize(event.getItemInHand());
+        int amount = IridiumChunkBusters.getInstance().getChunkBusterSize(event.getItemInHand());
         if (amount < 1) return;
         Location location = event.getBlock().getLocation();
         ConfirmationGUI confirmationGUI = new ConfirmationGUI(amount, location);
