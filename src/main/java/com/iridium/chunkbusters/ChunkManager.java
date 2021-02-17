@@ -53,42 +53,42 @@ public class ChunkManager {
             IridiumChunkBusters.getInstance().getNms().sendChunk(c, c.getWorld().getPlayers());
             return;
         }
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().actionBarMessage.replace("{ylevel}", String.valueOf(y)))));
-            int cx = c.getX() << 4;
-            int cz = c.getZ() << 4;
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().actionBarMessage.replace("{ylevel}", String.valueOf(y)))));
+        int cx = c.getX() << 4;
+        int cz = c.getZ() << 4;
 
-            List<Location> changedBlocks = new ArrayList<>();
+        List<Location> changedBlocks = new ArrayList<>();
 
-            World world = c.getWorld();
+        World world = c.getWorld();
 
-            for (int x = cx; x < cx + 16; x++) {
-                for (int z = cz; z < cz + 16; z++) {
-                    Material material = chunkSnapshot.getBlockType(x - cx, y, z - cz);
-                    Location location = new Location(world, x, y, z);
-                    changedBlocks.add(location);
-                    if (!IridiumChunkBusters.getInstance().getConfiguration().blacklist.contains(XMaterial.matchXMaterial(material))) {
-                        boolean allowed = true;
-                        for (Support support : IridiumChunkBusters.getInstance().getSupportedPlugins()) {
-                            if (!support.canDelete(player, location)) allowed = false;
-                        }
-                        if (allowed) {
-                            if (tileEntities.contains(location)) {
-                                //NMS will throw errors when trying to delete a Tile Entity
-                                location.getBlock().setType(Material.AIR, false);
-                            } else {
-                                IridiumChunkBusters.getInstance().getNms().setBlockFast(c.getWorld(), x, y, z, 0, (byte) 0, false);
-                            }
+        for (int x = cx; x < cx + 16; x++) {
+            for (int z = cz; z < cz + 16; z++) {
+                Material material = chunkSnapshot.getBlockType(x - cx, y, z - cz);
+                Location location = new Location(world, x, y, z);
+                changedBlocks.add(location);
+                if (!IridiumChunkBusters.getInstance().getConfiguration().blacklist.contains(XMaterial.matchXMaterial(material))) {
+                    boolean allowed = true;
+                    for (Support support : IridiumChunkBusters.getInstance().getSupportedPlugins()) {
+                        if (!support.canDelete(player, location)) allowed = false;
+                    }
+                    if (allowed) {
+                        if (tileEntities.contains(location)) {
+                            //NMS will throw errors when trying to delete a Tile Entity
+                            location.getBlock().setType(Material.AIR, false);
+                        } else {
+                            IridiumChunkBusters.getInstance().getNms().setBlockFast(c.getWorld(), x, y, z, 0, (byte) 0, false);
                         }
                     }
                 }
             }
-            IridiumChunkBusters.getInstance().getNms().sendChunk(c, changedBlocks, c.getWorld().getPlayers());
+        }
+        IridiumChunkBusters.getInstance().getNms().sendChunk(c, changedBlocks, c.getWorld().getPlayers());
 
-            if(IridiumChunkBusters.getInstance().getConfiguration().deleteInteval<1){
-                deleteChunk(c, chunkSnapshot, tileEntities, player, y - 1);
-            }else{
-                Bukkit.getScheduler().runTaskLater(IridiumChunkBusters.getInstance(), () -> deleteChunk(c, chunkSnapshot, tileEntities, player, y - 1), IridiumChunkBusters.getInstance().getConfiguration().deleteInteval);
-            }
+        if (IridiumChunkBusters.getInstance().getConfiguration().deleteInteval < 1) {
+            deleteChunk(c, chunkSnapshot, tileEntities, player, y - 1);
+        } else {
+            Bukkit.getScheduler().runTaskLater(IridiumChunkBusters.getInstance(), () -> deleteChunk(c, chunkSnapshot, tileEntities, player, y - 1), IridiumChunkBusters.getInstance().getConfiguration().deleteInteval);
+        }
     }
 
 }
