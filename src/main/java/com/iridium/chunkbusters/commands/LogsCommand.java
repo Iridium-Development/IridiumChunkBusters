@@ -10,7 +10,7 @@ import java.util.List;
 public class LogsCommand extends Command {
 
     public LogsCommand() {
-        super(Arrays.asList("list"), "logs", "", true);
+        super(Arrays.asList("logs"), "Show recent chunkbusters used", "", true);
     }
 
     @Override
