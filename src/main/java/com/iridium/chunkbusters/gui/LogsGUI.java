@@ -23,12 +23,12 @@ import java.util.stream.Collectors;
 public class LogsGUI implements InventoryHolder {
 
     private final UUID uuid;
-    private int page;
+    private final int page;
 
     private boolean next;
-    private boolean previous;
+    private final boolean previous;
 
-    private HashMap<Integer, ChunkBuster> chunkBusters = new HashMap<>();
+    private final HashMap<Integer, ChunkBuster> chunkBusters = new HashMap<>();
 
     public LogsGUI(UUID uuid, int page) {
         this.uuid = uuid;
