@@ -65,7 +65,7 @@ public class IridiumChunkBusters extends DependencyPlugin {
         }
         getDataFolder().mkdir();
         instance = this;
-        this.persist = new Persist(Persist.PersistType.YAML);
+        this.persist = new Persist(Persist.PersistType.JSON);
         this.commandManager = new CommandManager("chunkbusters");
         loadConfigs();
         saveConfigs();

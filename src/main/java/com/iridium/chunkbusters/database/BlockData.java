@@ -1,14 +1,16 @@
 package com.iridium.chunkbusters.database;
 
+import com.iridium.chunkbusters.ChunkLayer;
+import com.iridium.chunkbusters.IridiumChunkBusters;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.BlockState;
+import org.bukkit.Chunk;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Base64;
 
 @Getter
 @NoArgsConstructor
@@ -26,37 +28,36 @@ public class BlockData {
     @NotNull
     private String world;
 
-    @DatabaseField(columnName = "x", canBeNull = false)
-    @NotNull
-    private int x;
-
     @DatabaseField(columnName = "y", canBeNull = false)
     @NotNull
     private int y;
 
-    @DatabaseField(columnName = "z", canBeNull = false)
+    @DatabaseField(columnName = "chunk_x", canBeNull = false)
+    @NotNull
+    private int x;
+
+    @DatabaseField(columnName = "chunk_z", canBeNull = false)
     @NotNull
     private int z;
 
-    @DatabaseField(columnName = "material", canBeNull = false)
+    @DatabaseField(columnName = "blocks", canBeNull = false)
     @NotNull
-    private Material material;
+    private String blocks;
 
-    @DatabaseField(columnName = "data", canBeNull = false)
-    @NotNull
-    private Byte data;
-
-    public Location getLocation() {
-        return new Location(Bukkit.getWorld(world), x, y, z);
+    public ChunkLayer getBlocks() {
+        return IridiumChunkBusters.getInstance().getPersist().load(ChunkLayer.class, new String(Base64.getDecoder().decode(blocks)));
     }
 
-    public BlockData(ChunkBuster chunkBuster, BlockState blockState) {
+    public Chunk getChunk() {
+        return Bukkit.getWorld(world).getChunkAt(x, z);
+    }
+
+    public BlockData(@NotNull ChunkBuster chunkBuster, @NotNull String world, int x, int y, int z, ChunkLayer blocks) {
         this.chunkBuster = chunkBuster;
-        this.world = blockState.getWorld().getName();
-        this.x = blockState.getX();
-        this.y = blockState.getY();
-        this.z = blockState.getZ();
-        this.material = blockState.getType();
-        this.data = blockState.getRawData();
+        this.world = world;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.blocks = new String(Base64.getEncoder().encode(IridiumChunkBusters.getInstance().getPersist().toString(blocks).getBytes()));
     }
 }
