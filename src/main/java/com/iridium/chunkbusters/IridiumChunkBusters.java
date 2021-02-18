@@ -75,10 +75,7 @@ public class IridiumChunkBusters extends DependencyPlugin {
             throwables.printStackTrace();
         }
         databaseManager.getChunkBusters().thenAccept(chunkBusters -> {
-            chunkBusters.stream().filter(chunkBuster -> chunkBuster.getY() != 0).forEach(chunkBuster -> {
-                activeChunkBusters.add(chunkBuster);
-                chunkBuster.deleteChunks();
-            });
+            chunkBusters.stream().filter(chunkBuster -> chunkBuster.getY() != 0).forEach(ChunkBuster::deleteChunks);
         });
         registerListeners();
         this.support = getSupport();

@@ -24,7 +24,7 @@ public class Configuration {
     public Item no = new Item(XMaterial.RED_STAINED_GLASS_PANE, 1, "&c&lNo", Collections.emptyList());
     public Item nextPage = new Item(XMaterial.GREEN_STAINED_GLASS_PANE, 1, "&a&lNext", Collections.emptyList());
     public Item previousPage = new Item(XMaterial.RED_STAINED_GLASS_PANE, 1, "&c&lPrevious", Collections.emptyList());
-    public Item chunkBusterLog = new Item(XMaterial.PLAYER_HEAD, 0, 1, "&e&l{player}", "{player}", Arrays.asList("&7Size: {size}x{size}", "&7Time: {time}", "&7Chunk: {chunk}", "&7Click to restore chunks"));
+    public Item chunkBusterLog = new Item(XMaterial.PLAYER_HEAD, 0, 1, "&e&l{player}", "{player}", Arrays.asList("&7Size: {size}x{size}", "&7Time: {time}", "&7Chunk: {chunk}", "","&e&l[!] &7Click to restore chunks"));
 
     public List<XMaterial> blacklist = Arrays.asList(XMaterial.BEDROCK, XMaterial.SPAWNER);
 

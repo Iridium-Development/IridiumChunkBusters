@@ -90,7 +90,7 @@ public class ChunkBuster {
                 chunks.add(chunk);
             }
         }
-        deleteChunks(chunks);
+        Bukkit.getScheduler().runTask(IridiumChunkBusters.getInstance(), () -> deleteChunks(chunks));
         IridiumChunkBusters.getInstance().getActiveChunkBusters().add(this);
     }
 
@@ -108,13 +108,11 @@ public class ChunkBuster {
         if (player != null) {
             IridiumChunkBusters.getInstance().getNms().sendActionBar(player, StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().actionBarMessage.replace("{ylevel}", String.valueOf(y))));
         }
-
         for (Chunk c : chunks) {
             ChunkLayer chunkLayer = new ChunkLayer();
             List<Location> tileEntities = Arrays.stream(c.getTileEntities()).map(BlockState::getLocation).collect(Collectors.toList());
             int cx = c.getX() << 4;
             int cz = c.getZ() << 4;
-
             List<Location> changedBlocks = new ArrayList<>();
 
             World world = c.getWorld();
