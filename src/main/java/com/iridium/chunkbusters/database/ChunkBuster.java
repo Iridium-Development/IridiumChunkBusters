@@ -3,7 +3,9 @@ package com.iridium.chunkbusters.database;
 import com.cryptomorin.xseries.XMaterial;
 import com.iridium.chunkbusters.IridiumChunkBusters;
 import com.iridium.chunkbusters.utils.StringUtils;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +18,10 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Getter
@@ -51,6 +56,9 @@ public class ChunkBuster {
     @DatabaseField(columnName = "starting_level", canBeNull = false)
     private int startingLevel;
 
+    @ForeignCollectionField(eager = true)
+    private ForeignCollection<BlockData> blockDataList;
+
     public LocalDateTime getTime() {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault());
     }
@@ -74,35 +82,34 @@ public class ChunkBuster {
         Chunk c = getChunk();
         int cx = c.getX();
         int cz = c.getZ();
-        HashMap<Chunk, ChunkSnapshot> chunks = new HashMap<>();
+        List<Chunk> chunks = new ArrayList<>();
         for (int x = cx - (radius - 1); x <= cx + (radius - 1); x++) {
             for (int z = cz - (radius - 1); z <= cz + (radius - 1); z++) {
                 Chunk chunk = c.getWorld().getChunkAt(x, z);
-                chunks.put(chunk, chunk.getChunkSnapshot());
+                chunks.add(chunk);
             }
         }
         deleteChunks(chunks);
-        Bukkit.getScheduler().runTaskAsynchronously(IridiumChunkBusters.getInstance(), () -> IridiumChunkBusters.getInstance().getDatabaseManager().saveChunkBuster(this));
         IridiumChunkBusters.getInstance().getActiveChunkBusters().add(this);
     }
 
-    private void deleteChunks(final HashMap<Chunk, ChunkSnapshot> chunks) {
+    private void deleteChunks(final List<Chunk> chunks) {
         Player player = Bukkit.getPlayer(uuid);
         if (y == 0) {
-            for (Chunk c : chunks.keySet()) {
+            for (Chunk c : chunks) {
                 IridiumChunkBusters.getInstance().getNms().sendChunk(c, c.getWorld().getPlayers());
             }
             Bukkit.getScheduler().runTaskAsynchronously(IridiumChunkBusters.getInstance(), () -> IridiumChunkBusters.getInstance().getDatabaseManager().saveChunkBuster(this));
             IridiumChunkBusters.getInstance().getActiveChunkBusters().remove(this);
+            Bukkit.getScheduler().runTaskAsynchronously(IridiumChunkBusters.getInstance(), () -> IridiumChunkBusters.getInstance().getDatabaseManager().commitBlockData());
             return;
         }
         if (player != null) {
             IridiumChunkBusters.getInstance().getNms().sendActionBar(player, StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().actionBarMessage.replace("{ylevel}", String.valueOf(y))));
         }
 
-        for (Chunk c : chunks.keySet()) {
+        for (Chunk c : chunks) {
             List<Location> tileEntities = Arrays.stream(c.getTileEntities()).map(BlockState::getLocation).collect(Collectors.toList());
-            ChunkSnapshot chunkSnapshot = chunks.get(c);
             int cx = c.getX() << 4;
             int cz = c.getZ() << 4;
 
@@ -113,23 +120,20 @@ public class ChunkBuster {
             for (int x = cx; x < cx + 16; x++) {
                 for (int z = cz; z < cz + 16; z++) {
                     Location location = new Location(world, x, y, z);
-                    Material material;
-                    if (NOTLEGACY) {
-                        material = chunkSnapshot.getBlockType(x - cx, y, z - cz);
-                    } else {
-                        material = location.getBlock().getType();
+                    BlockState blockState = location.getBlock().getState();
+                    if (IridiumChunkBusters.getInstance().getConfiguration().blacklist.contains(XMaterial.matchXMaterial(blockState.getType())) || !IridiumChunkBusters.getInstance().getSupport().canDelete(player, location) || blockState.getType().equals(Material.AIR)) {
+                        continue;
                     }
+                    IridiumChunkBusters.getInstance().getDatabaseManager().saveBlockData(new BlockData(this, blockState));
                     changedBlocks.add(location);
-                    if (!IridiumChunkBusters.getInstance().getConfiguration().blacklist.contains(XMaterial.matchXMaterial(material))) {
-                        if (IridiumChunkBusters.getInstance().getSupport().canDelete(player, location)) {
-                            if (tileEntities.contains(location)) {
-                                //NMS will throw errors when trying to delete a Tile Entity
-                                location.getBlock().setType(Material.AIR, false);
-                            } else {
-                                IridiumChunkBusters.getInstance().getNms().setBlockFast(c.getWorld(), x, y, z, 0, (byte) 0, false);
-                            }
-                        }
+                    if (tileEntities.contains(location)) {
+                        //NMS will throw errors when trying to delete a Tile Entity
+                        location.getBlock().setType(Material.AIR, false);
+                    } else {
+                        IridiumChunkBusters.getInstance().getNms().setBlockFast(c.getWorld(), x, y, z, 0, (byte) 0, false);
                     }
+
+
                 }
             }
             IridiumChunkBusters.getInstance().getNms().sendChunk(c, changedBlocks, c.getWorld().getPlayers());
@@ -139,6 +143,29 @@ public class ChunkBuster {
             deleteChunks(chunks);
         } else {
             Bukkit.getScheduler().runTaskLater(IridiumChunkBusters.getInstance(), () -> deleteChunks(chunks), IridiumChunkBusters.getInstance().getConfiguration().deleteInterval);
+        }
+    }
+
+    public void undo() {
+        Player player = Bukkit.getPlayer(uuid);
+        if (y > startingLevel) {
+            Bukkit.getScheduler().runTaskAsynchronously(IridiumChunkBusters.getInstance(), () -> IridiumChunkBusters.getInstance().getDatabaseManager().deleteChunkBuster(this));
+            return;
+        }
+        if (player != null) {
+            IridiumChunkBusters.getInstance().getNms().sendActionBar(player, StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().actionBarMessage.replace("{ylevel}", String.valueOf(y))));
+        }
+        blockDataList.stream().filter(bd -> bd.getY() == y).forEach(blockData -> {
+            BlockState blockState = blockData.getLocation().getBlock().getState();
+            blockState.setType(blockData.getMaterial());
+            blockState.setRawData(blockData.getData());
+            blockState.update(true, false);
+        });
+        y++;
+        if (IridiumChunkBusters.getInstance().getConfiguration().deleteInterval < 1) {
+            undo();
+        } else {
+            Bukkit.getScheduler().runTaskLater(IridiumChunkBusters.getInstance(), this::undo, IridiumChunkBusters.getInstance().getConfiguration().deleteInterval);
         }
     }
 
