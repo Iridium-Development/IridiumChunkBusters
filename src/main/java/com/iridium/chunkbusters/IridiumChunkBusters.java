@@ -93,6 +93,7 @@ public class IridiumChunkBusters extends DependencyPlugin {
     @Override
     protected void disable() {
         activeChunkBusters.forEach(chunkBuster -> databaseManager.saveChunkBuster(chunkBuster));
+        IridiumChunkBusters.getInstance().getDatabaseManager().commitBlockData();
         getLogger().info("-------------------------------");
         getLogger().info("");
         getLogger().info(getDescription().getName() + " Disabled!");
