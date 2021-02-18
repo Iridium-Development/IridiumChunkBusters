@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -26,6 +27,8 @@ public class LogsGUI implements InventoryHolder {
 
     private boolean next;
     private boolean previous;
+
+    private HashMap<Integer, ChunkBuster> chunkBusters = new HashMap<>();
 
     public LogsGUI(UUID uuid, int page) {
         this.uuid = uuid;
@@ -42,16 +45,17 @@ public class LogsGUI implements InventoryHolder {
             inventory.setItem(i, XMaterial.GRAY_STAINED_GLASS_PANE.parseItem());
         }
         IridiumChunkBusters.getInstance().getDatabaseManager().getChunkBusters().thenAccept(list -> {
-            List<ChunkBuster> chunkBusters = list.stream().filter(chunkBuster -> IridiumChunkBusters.getInstance().getSupport().isRelevant(this.uuid, chunkBuster)).collect(Collectors.toList());
+            List<ChunkBuster> chunkBustersList = list.stream().filter(chunkBuster -> IridiumChunkBusters.getInstance().getSupport().isRelevant(this.uuid, chunkBuster)).collect(Collectors.toList());
             int i = 0;
             int slot = 0;
-            for (ChunkBuster chunkBuster : chunkBusters) {
+            for (ChunkBuster chunkBuster : chunkBustersList) {
                 if (i >= 45 * (page - 1) && i < 45 * page) {
+                    chunkBusters.put(slot, chunkBuster);
                     OfflinePlayer player = Bukkit.getOfflinePlayer(chunkBuster.getUuid());
                     String chunk = chunkBuster.getChunk().getWorld().getName() + " " + chunkBuster.getChunk().getX() + "," + chunkBuster.getChunk().getZ();
                     inventory.setItem(slot, ItemStackUtils.makeItem(IridiumChunkBusters.getInstance().getConfiguration().chunkBusterLog, Arrays.asList(
                             new Placeholder("player", player.getName()),
-                            new Placeholder("size", String.valueOf(chunkBuster.getRadius()*2-1)),
+                            new Placeholder("size", String.valueOf(chunkBuster.getRadius() * 2 - 1)),
                             new Placeholder("time", chunkBuster.getTime().format(DateTimeFormatter.ofPattern(IridiumChunkBusters.getInstance().getConfiguration().dateTimeFormat))),
                             new Placeholder("chunk", chunk)
                     )));
@@ -61,7 +65,7 @@ public class LogsGUI implements InventoryHolder {
             }
             inventory.setItem(48, ItemStackUtils.makeItem(IridiumChunkBusters.getInstance().getConfiguration().previousPage));
             inventory.setItem(51, ItemStackUtils.makeItem(IridiumChunkBusters.getInstance().getConfiguration().nextPage));
-            next = 45 * page < chunkBusters.size();
+            next = 45 * page < chunkBustersList.size();
         });
         return inventory;
     }
