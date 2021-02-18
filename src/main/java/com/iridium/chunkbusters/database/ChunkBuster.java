@@ -1,6 +1,7 @@
 package com.iridium.chunkbusters.database;
 
 import com.cryptomorin.xseries.XMaterial;
+import com.iridium.chunkbusters.ChunkLayer;
 import com.iridium.chunkbusters.IridiumChunkBusters;
 import com.iridium.chunkbusters.utils.StringUtils;
 import com.j256.ormlite.dao.ForeignCollection;
@@ -109,6 +110,7 @@ public class ChunkBuster {
         }
 
         for (Chunk c : chunks) {
+            ChunkLayer chunkLayer = new ChunkLayer();
             List<Location> tileEntities = Arrays.stream(c.getTileEntities()).map(BlockState::getLocation).collect(Collectors.toList());
             int cx = c.getX() << 4;
             int cz = c.getZ() << 4;
@@ -124,7 +126,8 @@ public class ChunkBuster {
                     if (IridiumChunkBusters.getInstance().getConfiguration().blacklist.contains(XMaterial.matchXMaterial(blockState.getType())) || !IridiumChunkBusters.getInstance().getSupport().canDelete(player, location) || blockState.getType().equals(Material.AIR)) {
                         continue;
                     }
-                    IridiumChunkBusters.getInstance().getDatabaseManager().saveBlockData(new BlockData(this, blockState));
+                    chunkLayer.blocks[x - cx][z - cz] = blockState.getType();
+                    chunkLayer.data[x - cx][z - cz] = blockState.getRawData();
                     changedBlocks.add(location);
                     if (tileEntities.contains(location)) {
                         //NMS will throw errors when trying to delete a Tile Entity
@@ -135,6 +138,7 @@ public class ChunkBuster {
                 }
             }
             IridiumChunkBusters.getInstance().getNms().sendChunk(c, changedBlocks, c.getWorld().getPlayers());
+            IridiumChunkBusters.getInstance().getDatabaseManager().saveBlockData(new BlockData(this, world.getName(), c.getX(), y, c.getZ(), chunkLayer));
         }
         y--;
         if (IridiumChunkBusters.getInstance().getConfiguration().deleteInterval < 1) {
@@ -154,10 +158,17 @@ public class ChunkBuster {
             IridiumChunkBusters.getInstance().getNms().sendActionBar(player, StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().actionBarMessage.replace("{ylevel}", String.valueOf(y))));
         }
         blockDataList.stream().filter(bd -> bd.getY() == y).forEach(blockData -> {
-            BlockState blockState = blockData.getLocation().getBlock().getState();
-            blockState.setType(blockData.getMaterial());
-            blockState.setRawData(blockData.getData());
-            blockState.update(true, false);
+            Chunk chunk = blockData.getChunk();
+            ChunkLayer chunkLayer = blockData.getBlocks();
+            for (int x = 0; x < 16; x++) {
+                for (int z = 0; z < 16; z++) {
+                    if (chunkLayer.blocks[x][z] == null) continue;
+                    BlockState blockState = chunk.getBlock(x, y, z).getState();
+                    blockState.setType(chunkLayer.blocks[x][z]);
+                    blockState.setRawData(chunkLayer.data[x][z]);
+                    blockState.update(true, false);
+                }
+            }
         });
         y++;
         if (IridiumChunkBusters.getInstance().getConfiguration().deleteInterval < 1) {
