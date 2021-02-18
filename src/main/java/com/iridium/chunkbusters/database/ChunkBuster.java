@@ -162,6 +162,8 @@ public class ChunkBuster {
                 for (int z = 0; z < 16; z++) {
                     if (chunkLayer.blocks[x][z] == null) continue;
                     BlockState blockState = chunk.getBlock(x, y, z).getState();
+                    if (IridiumChunkBusters.getInstance().getConfiguration().onlyRestoreWhenBlockIsAir && !blockState.getType().equals(Material.AIR))
+                        continue;
                     blockState.setType(chunkLayer.blocks[x][z]);
                     blockState.setRawData(chunkLayer.data[x][z]);
                     blockState.update(true, false);
