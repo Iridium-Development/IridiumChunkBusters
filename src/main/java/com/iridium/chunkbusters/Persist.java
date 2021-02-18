@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,12 +15,10 @@ public class Persist {
 
     public Persist(PersistType persistType) {
         this.persistType = persistType;
-        switch (persistType) {
-            case YAML:
-                objectMapper = new ObjectMapper(new YAMLFactory());
-                break;
-            default:
-                objectMapper = new ObjectMapper(new JsonFactory());
+        if (persistType == PersistType.YAML) {
+            objectMapper = new ObjectMapper(new YAMLFactory());
+        } else {
+            objectMapper = new ObjectMapper(new JsonFactory());
         }
     }
 

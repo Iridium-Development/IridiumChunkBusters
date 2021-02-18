@@ -46,7 +46,7 @@ public class IridiumChunkBusters extends DependencyPlugin {
 
     private NMS nms;
 
-    private List<ChunkBuster> activeChunkBusters = new ArrayList<>();
+    private final List<ChunkBuster> activeChunkBusters = new ArrayList<>();
 
     @Override
     protected void enable() {
@@ -74,9 +74,7 @@ public class IridiumChunkBusters extends DependencyPlugin {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        databaseManager.getChunkBusters().thenAccept(chunkBusters -> {
-            chunkBusters.stream().filter(chunkBuster -> chunkBuster.getY() != 0).forEach(ChunkBuster::deleteChunks);
-        });
+        databaseManager.getChunkBusters().thenAccept(chunkBusters -> chunkBusters.stream().filter(chunkBuster -> chunkBuster.getY() != 0).forEach(ChunkBuster::deleteChunks));
         registerListeners();
         this.support = getSupport();
         getLogger().info("----------------------------------------");

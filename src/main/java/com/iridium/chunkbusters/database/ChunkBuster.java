@@ -30,8 +30,6 @@ import java.util.stream.Collectors;
 @DatabaseTable(tableName = "chunkbusters")
 public class ChunkBuster {
 
-    private static final boolean NOTLEGACY = XMaterial.supports(12);
-
     @DatabaseField(columnName = "id", generatedId = true, canBeNull = false)
     @NotNull
     private Integer id;
@@ -67,7 +65,7 @@ public class ChunkBuster {
     public Chunk getChunk() {
         String[] coords = chunk.split(",");
         World world = Bukkit.getWorld(coords[0]);
-        return world.getChunkAt(Integer.valueOf(coords[1]), Integer.valueOf(coords[2]));
+        return world.getChunkAt(Integer.parseInt(coords[1]), Integer.parseInt(coords[2]));
     }
 
     public ChunkBuster(@NotNull UUID uuid, @NotNull Chunk chunk, int radius, int y) {

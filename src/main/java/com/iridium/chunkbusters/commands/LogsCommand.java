@@ -8,13 +8,13 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class LogsCommand extends Command {
 
     public LogsCommand() {
-        super(Arrays.asList("logs"), "Show recent chunkbusters used", "", true);
+        super(Collections.singletonList("logs"), "Show recent chunkbusters used", "", true);
     }
 
     @Override

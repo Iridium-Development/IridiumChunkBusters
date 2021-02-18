@@ -201,6 +201,7 @@
             <artifactId>annotations</artifactId>
             <version>16.0.1</version>
         </dependency>
+
         <!-- Object-relational mapping -->
         <dependency>
             <groupId>com.j256.ormlite</groupId>
@@ -272,18 +273,6 @@
             <version>2.14.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/dependancies/MassiveCore.jar</systemPath>
-        </dependency>
-
-        <!-- Object-relational mapping -->
-        <dependency>
-            <groupId>com.j256.ormlite</groupId>
-            <artifactId>ormlite-core</artifactId>
-            <version>5.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.j256.ormlite</groupId>
-            <artifactId>ormlite-jdbc</artifactId>
-            <version>5.3</version>
         </dependency>
 
         <dependency>
