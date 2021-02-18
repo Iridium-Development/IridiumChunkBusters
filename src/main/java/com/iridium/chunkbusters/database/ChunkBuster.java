@@ -132,8 +132,6 @@ public class ChunkBuster {
                     } else {
                         IridiumChunkBusters.getInstance().getNms().setBlockFast(c.getWorld(), x, y, z, 0, (byte) 0, false);
                     }
-
-
                 }
             }
             IridiumChunkBusters.getInstance().getNms().sendChunk(c, changedBlocks, c.getWorld().getPlayers());
