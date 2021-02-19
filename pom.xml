@@ -249,8 +249,8 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>LATEST</version>
-            <scope>compile</scope>
+            <version>1.27</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Factions Support -->
