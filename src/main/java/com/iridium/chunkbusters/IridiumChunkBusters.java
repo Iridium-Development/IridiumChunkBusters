@@ -1,6 +1,7 @@
 package com.iridium.chunkbusters;
 
 import com.heretere.hdl.dependency.maven.annotation.MavenDependency;
+import com.heretere.hdl.relocation.annotation.Relocation;
 import com.heretere.hdl.spigot.DependencyPlugin;
 import com.iridium.chunkbusters.commands.CommandManager;
 import com.iridium.chunkbusters.configs.Configuration;
@@ -29,6 +30,8 @@ import java.util.List;
 @MavenDependency("com|fasterxml|jackson|core:jackson-core:2.12.1")
 @MavenDependency("com|fasterxml|jackson|core:jackson-annotations:2.12.1")
 @MavenDependency("com|fasterxml|jackson|dataformat:jackson-dataformat-yaml:2.12.1")
+@MavenDependency("org|yaml:snakeyaml:1.27")
+@Relocation(from = "org|yaml", to = "com|iridium|chunkbusters")
 @Getter
 public class IridiumChunkBusters extends DependencyPlugin {
 
