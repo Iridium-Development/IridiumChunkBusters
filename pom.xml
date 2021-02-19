@@ -246,6 +246,12 @@
             <version>2.12.1</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>LATEST</version>
+            <scope>compile</scope>
+        </dependency>
 
         <!-- Factions Support -->
         <dependency>
