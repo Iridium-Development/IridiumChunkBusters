@@ -17,6 +17,7 @@ import com.iridium.chunkbusters.utils.ItemStackUtils;
 import com.iridium.chunkbusters.utils.Placeholder;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import lombok.Getter;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -77,9 +78,10 @@ public class IridiumChunkBusters extends DependencyPlugin {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        databaseManager.getChunkBusters().thenAccept(chunkBusters -> chunkBusters.stream().filter(chunkBuster -> chunkBuster.getY() != 0).forEach(ChunkBuster::deleteChunks));
         registerListeners();
         this.support = getSupport();
+        databaseManager.getChunkBusters().thenAccept(chunkBusters -> chunkBusters.stream().filter(chunkBuster -> chunkBuster.getY() != 0).forEach(ChunkBuster::deleteChunks));
+        new Metrics(this, 9403);
         getLogger().info("----------------------------------------");
         getLogger().info("");
         getLogger().info(getDescription().getName() + " Enabled!");
