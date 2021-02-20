@@ -56,15 +56,15 @@ public class v1_16_R1 implements NMS {
     @Override
     public void sendChunk(Chunk chunk, List<Player> players) {
         Bukkit.getScheduler().runTaskAsynchronously(IridiumChunkBusters.getInstance(), () -> chunk.getWorld().getPlayers().forEach(player -> {
-            net.minecraft.server.v1_16_R1.PacketPlayOutMapChunk packetPlayOutMapChunk = new net.minecraft.server.v1_16_R1.PacketPlayOutMapChunk(((org.bukkit.craftbukkit.v1_16_R1.CraftChunk) chunk).getHandle(), 65535, true);
+            net.minecraft.server.v1_16_R1.PacketPlayOutMapChunk packetPlayOutMapChunk = new PacketPlayOutMapChunk(((CraftChunk) chunk).getHandle(), 65535, true);
             ((org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer) player).getHandle().playerConnection.sendPacket(packetPlayOutMapChunk);
         }));
     }
 
     @Override
     public void sendActionBar(Player player, String message) {
-        net.minecraft.server.v1_16_R1.IChatBaseComponent iChatBaseComponent = net.minecraft.server.v1_16_R1.IChatBaseComponent.ChatSerializer.a(ChatColor.translateAlternateColorCodes('&', "{\"text\":\"" + message + "\"}"));
-        net.minecraft.server.v1_16_R1.PacketPlayOutTitle packetPlayOutTitle = new net.minecraft.server.v1_16_R1.PacketPlayOutTitle(net.minecraft.server.v1_16_R1.PacketPlayOutTitle.EnumTitleAction.ACTIONBAR, iChatBaseComponent, 0, 20, 0);
-        ((org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer) player).getHandle().playerConnection.sendPacket(packetPlayOutTitle);
+        IChatBaseComponent iChatBaseComponent = IChatBaseComponent.ChatSerializer.a(ChatColor.translateAlternateColorCodes('&', "{\"text\":\"" + message + "\"}"));
+        PacketPlayOutTitle packetPlayOutTitle = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.ACTIONBAR, iChatBaseComponent, 0, 20, 0);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packetPlayOutTitle);
     }
 }

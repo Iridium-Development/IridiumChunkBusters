@@ -1,10 +1,7 @@
 package com.iridium.chunkbusters.nms;
 
 import com.iridium.chunkbusters.IridiumChunkBusters;
-import net.minecraft.server.v1_8_R1.ChunkSection;
-import net.minecraft.server.v1_8_R1.EntityPlayer;
-import net.minecraft.server.v1_8_R1.IBlockData;
-import net.minecraft.server.v1_8_R1.PacketPlayOutMultiBlockChange;
+import net.minecraft.server.v1_8_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -57,8 +54,8 @@ public class v1_8_R1 implements NMS {
     @Override
     public void sendChunk(Chunk chunk, List<Player> players) {
         Bukkit.getScheduler().runTaskAsynchronously(IridiumChunkBusters.getInstance(), () -> chunk.getWorld().getPlayers().forEach(player -> {
-            net.minecraft.server.v1_8_R1.PacketPlayOutMapChunk packetPlayOutMapChunk = new net.minecraft.server.v1_8_R1.PacketPlayOutMapChunk(((org.bukkit.craftbukkit.v1_8_R1.CraftChunk) chunk).getHandle(), true, 65535);
-            ((org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer) player).getHandle().playerConnection.sendPacket(packetPlayOutMapChunk);
+            PacketPlayOutMapChunk packetPlayOutMapChunk = new PacketPlayOutMapChunk(((CraftChunk) chunk).getHandle(), true, 65535);
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packetPlayOutMapChunk);
         }));
     }
 
