@@ -16,7 +16,7 @@ public class FactionsUUID implements Support {
         Faction faction = FPlayers.getInstance().getByPlayer(player).getFaction();
         FLocation loc = new FLocation(location);
         Faction B = Board.getInstance().getFactionAt(loc);
-        return (ChatColor.stripColor(B.getTag()).equalsIgnoreCase("Wilderness")) || (faction == B);
+        return (ChatColor.stripColor(B.getTag()).equalsIgnoreCase("Wilderness")) || (faction.equals(B));
     }
 
     @Override

@@ -18,7 +18,7 @@ public class Factions implements Support {
     public boolean canDelete(Player player, Location location) {
         Faction P = MPlayer.get(player).getFaction();
         Faction B = BoardColl.get().getFactionAt(PS.valueOf(location));
-        return (ChatColor.stripColor(B.getName()).equalsIgnoreCase("Wilderness")) || (P == B);
+        return (ChatColor.stripColor(B.getName()).equalsIgnoreCase("Wilderness")) || (P.equals(B));
     }
 
     @Override
