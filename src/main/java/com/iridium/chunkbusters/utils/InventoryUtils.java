@@ -9,10 +9,8 @@ public class InventoryUtils {
     public static int getAmount(Inventory inventory, XMaterial materials) {
         int total = 0;
         for (ItemStack item : inventory.getContents()) {
-            if (item == null) continue;
-            if (materials.isSimilar(item)) {
-                total += item.getAmount();
-            }
+            if (item == null || !materials.isSimilar(item)) continue;
+            total += item.getAmount();
         }
         return total;
     }
@@ -26,15 +24,13 @@ public class InventoryUtils {
                 continue;
             }
             if (removed >= amount) break;
-            if (itemStack != null) {
-                if (material.isSimilar(itemStack)) {
-                    if (removed + itemStack.getAmount() <= amount) {
-                        removed += itemStack.getAmount();
-                        inventory.setItem(index, null);
-                    } else {
-                        itemStack.setAmount(itemStack.getAmount() - (amount - removed));
-                        removed += amount;
-                    }
+            if (itemStack != null && material.isSimilar(itemStack)) {
+                if (removed + itemStack.getAmount() <= amount) {
+                    removed += itemStack.getAmount();
+                    inventory.setItem(index, null);
+                } else {
+                    itemStack.setAmount(itemStack.getAmount() - (amount - removed));
+                    removed += amount;
                 }
             }
             index++;

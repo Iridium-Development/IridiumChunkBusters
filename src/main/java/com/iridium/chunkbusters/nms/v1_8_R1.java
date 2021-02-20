@@ -15,9 +15,9 @@ import java.util.List;
 public class v1_8_R1 implements NMS {
     @Override
     public void setBlockFast(org.bukkit.World world, int x, int y, int z, int blockId, byte data, boolean applyPhysics) {
-        net.minecraft.server.v1_8_R1.World nmsWorld = ((CraftWorld) world).getHandle();
+        World nmsWorld = ((CraftWorld) world).getHandle();
         net.minecraft.server.v1_8_R1.Chunk nmsChunk = nmsWorld.getChunkAt(x >> 4, z >> 4);
-        IBlockData ibd = net.minecraft.server.v1_8_R1.Block.getByCombinedId(blockId + (data << 12));
+        IBlockData ibd = Block.getByCombinedId(blockId + (data << 12));
 
         ChunkSection cs = nmsChunk.getSections()[y >> 4];
         if (cs == null) {

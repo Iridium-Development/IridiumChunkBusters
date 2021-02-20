@@ -85,7 +85,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             if (command.getAliases().contains(args[0]) && (command.isEnabled() && (
                     cs.hasPermission(command.getPermission()) || command.getPermission().equalsIgnoreCase("")
                             || command.getPermission().equalsIgnoreCase("iridiumchunkbusters.")))) {
-                return command.TabComplete(cs, cmd, s, args);
+                return command.onTabComplete(cs, cmd, s, args);
             }
         }
         return null;

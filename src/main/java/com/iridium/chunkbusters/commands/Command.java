@@ -26,5 +26,5 @@ public abstract class Command {
 
     public abstract void execute(CommandSender sender, String[] args);
 
-    public abstract List<String> TabComplete(CommandSender cs, org.bukkit.command.Command cmd, String s, String[] args);
+    public abstract List<String> onTabComplete(CommandSender cs, org.bukkit.command.Command cmd, String s, String[] args);
 }
