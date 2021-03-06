@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Configuration {
 
-    public String prefix = "&e&lChunkBusters &8»";
+    public String prefix = "<GRADIENT:FFB61D>IridiumChunkBusters</GRADIENT:FF711D> &8»";
     public String confirmationGUITitle = "&7Are you sure?";
     public String actionBarMessage = "&e&lY-Level: {ylevel}";
     public String dateTimeFormat = "EEEE, MMMM dd HH:mm:ss";
