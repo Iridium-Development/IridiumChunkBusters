@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.peaches</groupId>
+    <groupId>com.iridium</groupId>
     <artifactId>IridiumChunkBusters</artifactId>
     <version>1.0.0</version>
 
@@ -226,31 +226,26 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.12.1</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <version>2.12.1</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
             <version>2.12.1</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
             <version>2.12.1</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>1.27</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- Factions Support -->
@@ -263,7 +258,7 @@
         <dependency>
             <groupId>com.massivecraft</groupId>
             <artifactId>Factions</artifactId>
-            <version>LATEST</version>
+            <version>1.6.9.5-U0.5.20</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -279,13 +274,6 @@
             <version>2.14.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/dependancies/MassiveCore.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.heretere.hdl</groupId>
-            <artifactId>spigot</artifactId>
-            <version>LATEST</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -328,6 +316,10 @@
                         <relocation>
                             <pattern>com.iridium.iridiumcolorapi</pattern>
                             <shadedPattern>com.iridium.chunkbusters</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.j256.ormlite</pattern>
+                            <shadedPattern>com.iridium.chunkbusters.ormlite</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
