@@ -8,11 +8,16 @@ import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_13_R1.CraftChunk;
 import org.bukkit.craftbukkit.v1_13_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_13_R1.util.CraftLegacy;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
 public class v1_13_R1 implements NMS {
+
+    static {
+        new CraftLegacy();
+    }
 
     @Override
     public void setBlockFast(World world, int x, int y, int z, int blockId, byte data, boolean applyPhysics) {
