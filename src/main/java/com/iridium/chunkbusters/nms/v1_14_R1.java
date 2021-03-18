@@ -5,6 +5,7 @@ import net.minecraft.server.v1_14_R1.*;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.*;
+import org.bukkit.craftbukkit.v1_14_R1.util.CraftLegacy;
 import org.bukkit.craftbukkit.v1_14_R1.CraftChunk;
 import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
@@ -13,6 +14,10 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class v1_14_R1 implements NMS {
+
+    static {
+        new CraftLegacy();
+    }
 
     @Override
     public void setBlockFast(World world, int x, int y, int z, int blockId, byte data, boolean applyPhysics) {
