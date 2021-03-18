@@ -8,6 +8,7 @@ import com.iridium.chunkbusters.utils.Placeholder;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +21,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Getter
-public class LogsGUI implements InventoryHolder {
+public class LogsGUI implements GUI {
 
     private final UUID uuid;
     private final int page;
@@ -68,5 +69,21 @@ public class LogsGUI implements InventoryHolder {
             next = 45 * page < chunkBustersList.size();
         });
         return inventory;
+    }
+
+    @Override
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (chunkBusters.containsKey(event.getSlot())) {
+            ChunkBuster chunkBuster = chunkBusters.get(event.getSlot());
+            if (chunkBuster.getY() == 0 && IridiumChunkBusters.getInstance().getConfiguration().restoreChunkBusters) {
+                chunkBuster.undo();
+                Bukkit.getScheduler().runTaskAsynchronously(IridiumChunkBusters.getInstance(), () -> IridiumChunkBusters.getInstance().getDatabaseManager().deleteChunkBuster(chunkBuster));
+                event.getWhoClicked().closeInventory();
+            }
+        } else if (event.getSlot() == 51 && isNext()) {
+            event.getWhoClicked().openInventory(new LogsGUI(getUuid(), getPage() + 1).getInventory());
+        } else if (event.getSlot() == 48 && isPrevious()) {
+            event.getWhoClicked().openInventory(new LogsGUI(getUuid(), getPage() - 1).getInventory());
+        }
     }
 }
