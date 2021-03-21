@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
+@Getter
 public class ConfirmationGUI implements GUI {
 
     private final int size;
