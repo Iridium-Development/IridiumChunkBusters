@@ -25,6 +25,6 @@ public class HelpCommand extends Command {
 
     @Override
     public List<String> onTabComplete(CommandSender cs, org.bukkit.command.Command cmd, String s, String[] args) {
-        return null;
+        return Collections.emptyList();
     }
 }
