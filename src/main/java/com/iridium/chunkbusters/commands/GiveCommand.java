@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class GiveCommand extends Command {
@@ -35,6 +36,8 @@ public class GiveCommand extends Command {
 
     @Override
     public List<String> onTabComplete(CommandSender cs, org.bukkit.command.Command cmd, String s, String[] args) {
-        return null;
+        if (args.length == 2) return null;
+        if (args.length == 3) return Arrays.asList("1", "2", "3");
+        return Collections.emptyList();
     }
 }
