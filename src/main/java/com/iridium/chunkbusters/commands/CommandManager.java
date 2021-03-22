@@ -60,7 +60,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             }
         } else {
             if (cs instanceof Player) {
-                Bukkit.dispatchCommand(cs, "is help");
+                Bukkit.dispatchCommand(cs, "cb help");
                 Player p = (Player) cs;
                 return true;
             }
