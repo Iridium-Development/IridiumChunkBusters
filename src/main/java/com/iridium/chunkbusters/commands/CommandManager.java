@@ -2,12 +2,14 @@ package com.iridium.chunkbusters.commands;
 
 import com.iridium.chunkbusters.IridiumChunkBusters;
 import com.iridium.chunkbusters.utils.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class CommandManager implements CommandExecutor, TabCompleter {
@@ -25,6 +27,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         registerCommand(new ReloadCommand());
         registerCommand(new GiveCommand());
         registerCommand(new LogsCommand());
+
+        commands.sort(Comparator.comparing(command -> command.getAliases().get(0)));
     }
 
     public void registerCommand(Command command) {
@@ -56,6 +60,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             }
         } else {
             if (cs instanceof Player) {
+                Bukkit.dispatchCommand(cs, "is help");
                 Player p = (Player) cs;
                 return true;
             }
