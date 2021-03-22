@@ -25,6 +25,7 @@ public class InventoryClickListener implements Listener {
         InventoryHolder inventoryHolder = event.getInventory().getHolder();
         if (inventoryHolder instanceof ConfirmationGUI) {
             ConfirmationGUI confirmationGUI = (ConfirmationGUI) inventoryHolder;
+            IridiumChunkBusters.getInstance().getConfirmationGUIS().remove(confirmationGUI);
             if (confirmationGUI.isActivated()) return;
             confirmationGUI.getLocation().getBlock().setType(Material.AIR, false);
             event.getPlayer().getInventory().addItem(IridiumChunkBusters.getInstance().getChunkBuster(confirmationGUI.getSize()));

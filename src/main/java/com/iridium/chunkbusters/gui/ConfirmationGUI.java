@@ -28,6 +28,7 @@ public class ConfirmationGUI implements GUI {
         this.size = size;
         this.location = location;
         this.activated = false;
+        IridiumChunkBusters.getInstance().getConfirmationGUIS().add(this);
     }
 
     @NotNull

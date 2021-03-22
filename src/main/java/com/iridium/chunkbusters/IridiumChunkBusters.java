@@ -7,6 +7,7 @@ import com.iridium.chunkbusters.configs.Messages;
 import com.iridium.chunkbusters.configs.SQL;
 import com.iridium.chunkbusters.database.ChunkBuster;
 import com.iridium.chunkbusters.database.DatabaseManager;
+import com.iridium.chunkbusters.gui.ConfirmationGUI;
 import com.iridium.chunkbusters.listeners.BlockPlaceListener;
 import com.iridium.chunkbusters.listeners.InventoryClickListener;
 import com.iridium.chunkbusters.nms.NMS;
@@ -44,6 +45,8 @@ public class IridiumChunkBusters extends JavaPlugin {
     private NMS nms;
 
     private final List<ChunkBuster> activeChunkBusters = new ArrayList<>();
+
+    private final List<ConfirmationGUI> confirmationGUIS = new ArrayList<>();
 
     @Override
     public void onEnable() {
