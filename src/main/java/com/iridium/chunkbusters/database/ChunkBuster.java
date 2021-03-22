@@ -3,6 +3,7 @@ package com.iridium.chunkbusters.database;
 import com.cryptomorin.xseries.XMaterial;
 import com.iridium.chunkbusters.ChunkLayer;
 import com.iridium.chunkbusters.IridiumChunkBusters;
+import com.iridium.chunkbusters.gui.ConfirmationGUI;
 import com.iridium.chunkbusters.utils.StringUtils;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
@@ -19,10 +20,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -106,6 +104,7 @@ public class ChunkBuster {
         if (player != null) {
             IridiumChunkBusters.getInstance().getNms().sendActionBar(player, StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().actionBarMessage.replace("{ylevel}", String.valueOf(y))));
         }
+        HashSet<Location> chunkBusters = IridiumChunkBusters.getInstance().getConfirmationGUIS().stream().map(ConfirmationGUI::getLocation).collect(Collectors.toCollection(HashSet::new));
         for (Chunk c : chunks) {
             ChunkLayer chunkLayer = new ChunkLayer();
             List<Location> tileEntities = Arrays.stream(c.getTileEntities()).map(BlockState::getLocation).collect(Collectors.toList());
@@ -119,7 +118,7 @@ public class ChunkBuster {
                 for (int z = cz; z < cz + 16; z++) {
                     Location location = new Location(world, x, y, z);
                     BlockState blockState = location.getBlock().getState();
-                    if (IridiumChunkBusters.getInstance().getConfiguration().blacklist.contains(XMaterial.matchXMaterial(blockState.getType())) || !IridiumChunkBusters.getInstance().getSupport().canDelete(player, location) || blockState.getType().equals(Material.AIR)) {
+                    if (IridiumChunkBusters.getInstance().getConfiguration().blacklist.contains(XMaterial.matchXMaterial(blockState.getType())) || !IridiumChunkBusters.getInstance().getSupport().canDelete(player, location) || blockState.getType().equals(Material.AIR) || chunkBusters.contains(location)) {
                         continue;
                     }
                     chunkLayer.blocks[x - cx][z - cz] = blockState.getType();
