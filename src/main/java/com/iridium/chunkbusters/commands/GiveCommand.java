@@ -18,7 +18,7 @@ public class GiveCommand extends Command {
     @Override
     public void execute(CommandSender cs, String[] args) {
         if (args.length != 3) {
-            cs.sendMessage("/chunkbuster give <player> <radius>");
+            cs.sendMessage(com.iridium.chunkbusters.utils.StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().prefix + " &7/chunkbuster give <player> <radius>"));
             return;
         }
 

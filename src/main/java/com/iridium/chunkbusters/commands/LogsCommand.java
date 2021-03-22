@@ -24,7 +24,7 @@ public class LogsCommand extends Command {
             player.openInventory(new LogsGUI(player.getUniqueId(), 1).getInventory());
         } else if (player.hasPermission("iridiumchunkbusters.viewotherlogs")) {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
-            if (offlinePlayer != null) {
+            if (offlinePlayer.hasPlayedBefore()) {
                 player.openInventory(new LogsGUI(offlinePlayer.getUniqueId(), 1).getInventory());
             } else {
                 sender.sendMessage(StringUtils.color(IridiumChunkBusters.getInstance().getMessages().unknownPlayer.replace("%prefix%", IridiumChunkBusters.getInstance().getConfiguration().prefix)));
