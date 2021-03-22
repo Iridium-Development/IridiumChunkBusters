@@ -10,6 +10,7 @@ import com.iridium.chunkbusters.database.DatabaseManager;
 import com.iridium.chunkbusters.gui.ConfirmationGUI;
 import com.iridium.chunkbusters.listeners.BlockPlaceListener;
 import com.iridium.chunkbusters.listeners.InventoryClickListener;
+import com.iridium.chunkbusters.listeners.PlayerInteractListener;
 import com.iridium.chunkbusters.nms.NMS;
 import com.iridium.chunkbusters.support.*;
 import com.iridium.chunkbusters.utils.ItemStackUtils;
@@ -112,6 +113,7 @@ public class IridiumChunkBusters extends JavaPlugin {
     public void registerListeners() {
         Bukkit.getPluginManager().registerEvents(new BlockPlaceListener(), this);
         Bukkit.getPluginManager().registerEvents(new InventoryClickListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerInteractListener(), this);
     }
 
     public Support getSupport() {
