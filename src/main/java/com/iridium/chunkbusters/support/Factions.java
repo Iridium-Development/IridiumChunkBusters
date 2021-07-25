@@ -1,6 +1,5 @@
 package com.iridium.chunkbusters.support;
 
-
 import com.iridium.chunkbusters.database.ChunkBuster;
 import com.massivecraft.factions.entity.BoardColl;
 import com.massivecraft.factions.entity.Faction;

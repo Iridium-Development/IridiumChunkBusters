@@ -2,6 +2,7 @@ package com.iridium.chunkbusters.commands;
 
 import com.iridium.chunkbusters.IridiumChunkBusters;
 import com.iridium.chunkbusters.gui.LogsGUI;
+import com.iridium.iridiumcore.utils.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;

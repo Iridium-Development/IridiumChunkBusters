@@ -1,8 +1,8 @@
 package com.iridium.chunkbusters.gui;
 
-import com.cryptomorin.xseries.XMaterial;
 import com.iridium.chunkbusters.IridiumChunkBusters;
 import com.iridium.chunkbusters.database.ChunkBuster;
+import com.iridium.iridiumcore.dependencies.xseries.XMaterial;
 import com.iridium.iridiumcore.utils.ItemStackUtils;
 import com.iridium.iridiumcore.utils.Placeholder;
 import lombok.Getter;

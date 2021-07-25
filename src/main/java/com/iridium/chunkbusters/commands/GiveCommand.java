@@ -19,12 +19,12 @@ public class GiveCommand extends Command {
     @Override
     public void execute(CommandSender cs, String[] args) {
         if (args.length != 3) {
-            cs.sendMessage(com.iridium.chunkbusters.utils.StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().prefix + " &7/chunkbuster give <player> <radius>"));
+            cs.sendMessage(com.iridium.iridiumcore.utils.StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().prefix + " &7/chunkbuster give <player> <radius>"));
             return;
         }
 
         if (!StringUtils.isNumeric(args[2])) {
-            cs.sendMessage(com.iridium.chunkbusters.utils.StringUtils.color(IridiumChunkBusters.getInstance().getMessages().mustBeANumber.replace("%prefix%", IridiumChunkBusters.getInstance().getConfiguration().prefix)));
+            cs.sendMessage(com.iridium.iridiumcore.utils.StringUtils.color(IridiumChunkBusters.getInstance().getMessages().mustBeANumber.replace("%prefix%", IridiumChunkBusters.getInstance().getConfiguration().prefix)));
             return;
         }
         Player player = Bukkit.getPlayer(args[1]);
