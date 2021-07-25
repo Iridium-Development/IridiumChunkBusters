@@ -41,6 +41,7 @@ dependencies {
     }
     compileOnly("com.massivecraft.factions", "Factions", "2.14.0")
     compileOnly("com.massivecraft.massivecore", "MassiveCore", "2.14.0")
+    compileOnly("com.github.TownyAdvanced", "Towny", "0.96.7.0")
 
     // Enable lombok annotation processing
     annotationProcessor("org.projectlombok", "lombok", "1.18.20")
