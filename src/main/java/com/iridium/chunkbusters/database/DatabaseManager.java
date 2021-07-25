@@ -6,6 +6,8 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.jdbc.db.DatabaseTypeUtils;
+import com.j256.ormlite.logger.LoggerFactory;
+import com.j256.ormlite.logger.NullLogBackend;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +30,7 @@ public class DatabaseManager {
     private final ConnectionSource connectionSource;
 
     public DatabaseManager() throws SQLException {
+        LoggerFactory.setLogBackendFactory(new NullLogBackend.NullLogBackendFactory());
         String databaseURL = getDatabaseURL();
 
         connectionSource = new JdbcConnectionSource(
