@@ -3,16 +3,14 @@ package com.iridium.chunkbusters.gui;
 import com.cryptomorin.xseries.XMaterial;
 import com.iridium.chunkbusters.IridiumChunkBusters;
 import com.iridium.chunkbusters.database.ChunkBuster;
-import com.iridium.chunkbusters.utils.ItemStackUtils;
-import com.iridium.chunkbusters.utils.StringUtils;
+import com.iridium.iridiumcore.utils.ItemStackUtils;
+import com.iridium.iridiumcore.utils.StringUtils;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;

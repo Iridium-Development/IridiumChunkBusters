@@ -1,7 +1,6 @@
 package com.iridium.chunkbusters.commands;
 
 import com.iridium.chunkbusters.IridiumChunkBusters;
-import com.iridium.chunkbusters.utils.StringUtils;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collections;

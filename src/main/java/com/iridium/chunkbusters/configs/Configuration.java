@@ -1,7 +1,7 @@
 package com.iridium.chunkbusters.configs;
 
-import com.cryptomorin.xseries.XMaterial;
-import com.iridium.chunkbusters.Item;
+import com.iridium.iridiumcore.Item;
+import com.iridium.iridiumcore.dependencies.xseries.XMaterial;
 
 import java.util.Arrays;
 import java.util.Collections;
