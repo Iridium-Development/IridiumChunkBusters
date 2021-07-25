@@ -4,7 +4,6 @@ import com.cryptomorin.xseries.XMaterial;
 import com.iridium.chunkbusters.ChunkLayer;
 import com.iridium.chunkbusters.IridiumChunkBusters;
 import com.iridium.chunkbusters.gui.ConfirmationGUI;
-import com.iridium.chunkbusters.utils.StringUtils;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -94,7 +93,7 @@ public class ChunkBuster {
         Player player = Bukkit.getPlayer(uuid);
         if (y == 0) {
             for (Chunk c : chunks) {
-                IridiumChunkBusters.getInstance().getNms().sendChunk(c, c.getWorld().getPlayers());
+                IridiumChunkBusters.getInstance().getNms().sendChunk(c.getWorld().getPlayers(), c);
             }
             Bukkit.getScheduler().runTaskAsynchronously(IridiumChunkBusters.getInstance(), () -> IridiumChunkBusters.getInstance().getDatabaseManager().saveChunkBuster(this));
             IridiumChunkBusters.getInstance().getActiveChunkBusters().remove(this);
@@ -102,7 +101,7 @@ public class ChunkBuster {
             return;
         }
         if (player != null) {
-            IridiumChunkBusters.getInstance().getNms().sendActionBar(player, StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().actionBarMessage.replace("{ylevel}", String.valueOf(y))));
+//            IridiumChunkBusters.getInstance().getNms().sendActionBar(player, StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().actionBarMessage.replace("{ylevel}", String.valueOf(y))));
         }
         HashSet<Location> chunkBusters = IridiumChunkBusters.getInstance().getConfirmationGUIS().stream().map(ConfirmationGUI::getLocation).collect(Collectors.toCollection(HashSet::new));
         for (Chunk c : chunks) {
@@ -132,7 +131,7 @@ public class ChunkBuster {
                     }
                 }
             }
-            IridiumChunkBusters.getInstance().getNms().sendChunk(c, changedBlocks, c.getWorld().getPlayers());
+            IridiumChunkBusters.getInstance().getNms().sendChunk(c.getWorld().getPlayers(), c);
             IridiumChunkBusters.getInstance().getDatabaseManager().saveBlockData(new BlockData(this, world.getName(), c.getX(), y, c.getZ(), chunkLayer));
         }
         y--;
@@ -150,7 +149,7 @@ public class ChunkBuster {
             return;
         }
         if (player != null) {
-            IridiumChunkBusters.getInstance().getNms().sendActionBar(player, StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().actionBarMessage.replace("{ylevel}", String.valueOf(y))));
+//            IridiumChunkBusters.getInstance().getNms().sendActionBar(player, StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().actionBarMessage.replace("{ylevel}", String.valueOf(y))));
         }
         blockDataList.stream().filter(bd -> bd.getY() == y).forEach(blockData -> {
             Chunk chunk = blockData.getChunk();
