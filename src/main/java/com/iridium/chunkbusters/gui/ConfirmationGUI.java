@@ -6,6 +6,7 @@ import com.iridium.iridiumcore.dependencies.xseries.XMaterial;
 import com.iridium.iridiumcore.utils.ItemStackUtils;
 import com.iridium.iridiumcore.utils.StringUtils;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -20,6 +21,7 @@ public class ConfirmationGUI implements GUI {
 
     private final int size;
     private final Location location;
+    @Setter
     private boolean clickAction = false;
 
     public ConfirmationGUI(int size, Location location) {
