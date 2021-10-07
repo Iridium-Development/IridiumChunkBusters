@@ -20,12 +20,11 @@ public class ConfirmationGUI implements GUI {
 
     private final int size;
     private final Location location;
-    private boolean activated;
+    private boolean clickAction = false;
 
     public ConfirmationGUI(int size, Location location) {
         this.size = size;
         this.location = location;
-        this.activated = false;
         IridiumChunkBusters.getInstance().getConfirmationGUIS().add(this);
     }
 
@@ -56,9 +55,10 @@ public class ConfirmationGUI implements GUI {
                 });
             });
 
-            this.activated = true;
+            this.clickAction = true;
             event.getWhoClicked().closeInventory();
         } else if (event.getSlot() == 11) {
+            clickAction = true;
             location.getBlock().setType(Material.AIR, false);
             event.getWhoClicked().getInventory().addItem(IridiumChunkBusters.getInstance().getChunkBuster(size));
             event.getWhoClicked().closeInventory();
