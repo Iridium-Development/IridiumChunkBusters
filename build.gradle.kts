@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.iridium"
-version = "1.0.4"
+version = "1.0.5"
 description = "IridiumChunkBusters"
 
 repositories {
@@ -23,7 +23,7 @@ repositories {
 dependencies {
     // Dependencies that we want to shade in
     implementation("org.jetbrains", "annotations", "16.0.1")
-    implementation("com.iridium", "IridiumCore", "1.3.2")
+    implementation("com.iridium:IridiumCore:1.4.5")
     implementation("org.bstats", "bstats-bukkit", "2.2.1")
     implementation("com.github.j256", "ormlite-core", "master-SNAPSHOT")
     implementation("com.j256.ormlite", "ormlite-jdbc", "5.3")
@@ -31,7 +31,7 @@ dependencies {
 
     // Other dependencies that are not required or already available at runtime
     compileOnly("org.projectlombok", "lombok", "1.18.20")
-    compileOnly("org.spigotmc", "spigot-api", "1.17-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc", "spigot-api", "1.18-R0.1-SNAPSHOT")
     compileOnly("net.prosavage", "FactionsX", "1.2")
     compileOnly("com.massivecraft.massivesuper:MassiveSuper:2.14.0")
     compileOnly("com.massivecraft.massivesuper:Factions:2.14.0")
