@@ -74,7 +74,8 @@ public class LogsGUI implements GUI {
     public void onInventoryClick(InventoryClickEvent event) {
         if (chunkBusters.containsKey(event.getSlot())) {
             ChunkBuster chunkBuster = chunkBusters.get(event.getSlot());
-            if (chunkBuster.getY() == 0 && IridiumChunkBusters.getInstance().getConfiguration().restoreChunkBusters) {
+            int minHeight = XMaterial.getVersion() >= 17 ? chunkBuster.getChunk().getWorld().getMinHeight() : 0;
+            if (chunkBuster.getY() == minHeight && IridiumChunkBusters.getInstance().getConfiguration().restoreChunkBusters) {
                 chunkBuster.undo();
                 Bukkit.getScheduler().runTaskAsynchronously(IridiumChunkBusters.getInstance(), () -> IridiumChunkBusters.getInstance().getDatabaseManager().deleteChunkBuster(chunkBuster));
                 event.getWhoClicked().closeInventory();
