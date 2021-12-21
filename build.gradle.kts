@@ -23,10 +23,10 @@ repositories {
 dependencies {
     // Dependencies that we want to shade in
     implementation("org.jetbrains", "annotations", "16.0.1")
-    implementation("com.iridium:IridiumCore:1.4.5")
+    implementation("com.iridium:IridiumCore:1.4.9")
     implementation("org.bstats", "bstats-bukkit", "2.2.1")
-    implementation("com.github.j256", "ormlite-core", "master-SNAPSHOT")
-    implementation("com.j256.ormlite", "ormlite-jdbc", "5.3")
+    implementation("com.j256.ormlite:ormlite-core:5.7")
+    implementation("com.j256.ormlite:ormlite-jdbc:5.7")
     implementation("de.jeff_media", "SpigotUpdateChecker", "1.2.4")
 
     // Other dependencies that are not required or already available at runtime

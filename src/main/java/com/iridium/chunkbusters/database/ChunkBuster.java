@@ -85,19 +85,19 @@ public class ChunkBuster {
                 chunks.add(chunk);
             }
         }
-        Bukkit.getScheduler().runTask(IridiumChunkBusters.getInstance(), () -> deleteChunks(chunks));
+        int minheight = XMaterial.getVersion() >= 17 ? c.getWorld().getMinHeight() : 0;
+        Bukkit.getScheduler().runTask(IridiumChunkBusters.getInstance(), () -> deleteChunks(chunks, minheight));
         IridiumChunkBusters.getInstance().getActiveChunkBusters().add(this);
     }
 
-    private void deleteChunks(final List<Chunk> chunks) {
+    private void deleteChunks(final List<Chunk> chunks, int minHeight) {
         Player player = Bukkit.getPlayer(uuid);
-        if (y == 0) {
+        if (y == minHeight) {
             for (Chunk c : chunks) {
                 IridiumChunkBusters.getInstance().getNms().sendChunk(c.getWorld().getPlayers(), c);
             }
             Bukkit.getScheduler().runTaskAsynchronously(IridiumChunkBusters.getInstance(), () -> IridiumChunkBusters.getInstance().getDatabaseManager().saveChunkBuster(this));
             IridiumChunkBusters.getInstance().getActiveChunkBusters().remove(this);
-            Bukkit.getScheduler().runTaskAsynchronously(IridiumChunkBusters.getInstance(), () -> IridiumChunkBusters.getInstance().getDatabaseManager().commitBlockData());
             return;
         }
         if (player != null) {
@@ -106,10 +106,8 @@ public class ChunkBuster {
         HashSet<Location> chunkBusters = IridiumChunkBusters.getInstance().getConfirmationGUIS().stream().map(ConfirmationGUI::getLocation).collect(Collectors.toCollection(HashSet::new));
         for (Chunk c : chunks) {
             ChunkLayer chunkLayer = new ChunkLayer();
-            List<Location> tileEntities = Arrays.stream(c.getTileEntities()).map(BlockState::getLocation).collect(Collectors.toList());
             int cx = c.getX() << 4;
             int cz = c.getZ() << 4;
-            List<Location> changedBlocks = new ArrayList<>();
 
             World world = c.getWorld();
 
@@ -122,13 +120,7 @@ public class ChunkBuster {
                     }
                     chunkLayer.blocks[x - cx][z - cz] = blockState.getType();
                     chunkLayer.data[x - cx][z - cz] = blockState.getRawData();
-                    changedBlocks.add(location);
-                    if (tileEntities.contains(location)) {
-                        //NMS will throw errors when trying to delete a Tile Entity
-                        location.getBlock().setType(Material.AIR, false);
-                    } else {
-                        IridiumChunkBusters.getInstance().getNms().setBlockFast(c.getWorld(), x, y, z, 0, (byte) 0, false);
-                    }
+                    IridiumChunkBusters.getInstance().getNms().deleteBlockFast(location);
                 }
             }
             IridiumChunkBusters.getInstance().getNms().sendChunk(c.getWorld().getPlayers(), c);
@@ -136,9 +128,9 @@ public class ChunkBuster {
         }
         y--;
         if (IridiumChunkBusters.getInstance().getConfiguration().deleteInterval < 1) {
-            deleteChunks(chunks);
+            deleteChunks(chunks, minHeight);
         } else {
-            Bukkit.getScheduler().runTaskLater(IridiumChunkBusters.getInstance(), () -> deleteChunks(chunks), IridiumChunkBusters.getInstance().getConfiguration().deleteInterval);
+            Bukkit.getScheduler().runTaskLater(IridiumChunkBusters.getInstance(), () -> deleteChunks(chunks, minHeight), IridiumChunkBusters.getInstance().getConfiguration().deleteInterval);
         }
     }
 
