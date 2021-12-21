@@ -80,6 +80,7 @@ public class DatabaseManager {
     public void saveChunkBuster(@NotNull ChunkBuster chunkBuster) {
         try {
             chunkBustersDao.createOrUpdate(chunkBuster);
+            blockDataDao.commit(connectionSource.getReadWriteConnection(null));
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -89,14 +90,6 @@ public class DatabaseManager {
         if(!IridiumChunkBusters.getInstance().getConfiguration().restoreChunkBusters)return;
         try {
             blockDataDao.createOrUpdate(blockData);
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    public void commitBlockData() {
-        if(!IridiumChunkBusters.getInstance().getConfiguration().restoreChunkBusters)return;
-        try {
             blockDataDao.commit(connectionSource.getReadWriteConnection(null));
         } catch (SQLException exception) {
             exception.printStackTrace();
@@ -107,17 +100,9 @@ public class DatabaseManager {
         try {
             chunkBustersDao.delete(chunkBuster);
             for (BlockData blockData : chunkBuster.getBlockDataList()) {
-                deleteBlockData(blockData);
+                blockDataDao.delete(blockData);
             }
-            commitBlockData();
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    public void deleteBlockData(@NotNull BlockData blockData) {
-        try {
-            blockDataDao.delete(blockData);
+            blockDataDao.commit(connectionSource.getReadWriteConnection(null));
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
