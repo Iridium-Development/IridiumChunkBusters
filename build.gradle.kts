@@ -14,17 +14,20 @@ repositories {
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://ci.ender.zone/plugin/repository/everything/")
     maven("https://jitpack.io")
-    maven("https://nexus.iridiumdevelopment.net/repository/maven-releases/")
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://repo.rosewooddev.io/repository/public/")
     maven("https://hub.jeff-media.com/nexus/repository/jeff-media-public/")
+    maven("https://moyskleytech.com/debian/m2/")
+    mavenLocal()
     mavenCentral()
+    //maven("https://nexus.iridiumdevelopment.net/repository/maven-releases/")
+
 }
 
 dependencies {
     // Dependencies that we want to shade in
     implementation("org.jetbrains:annotations:22.0.0")
-    implementation("com.iridium:IridiumCore:1.5.3")
+    implementation("com.iridium:IridiumCore:1.6.6")
     implementation("org.bstats:bstats-bukkit:3.0.0")
     implementation("com.j256.ormlite:ormlite-core:6.1")
     implementation("com.j256.ormlite:ormlite-jdbc:6.1")
@@ -34,7 +37,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.22")
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
     compileOnly("net.prosavage:FactionsX:1.2")
-    compileOnly("com.massivecraft.massivesuper:MassiveSuper:2.14.0")
+    compileOnly("com.massivecraft.massivesuper:MassiveCore:2.14")
     compileOnly("com.massivecraft.massivesuper:Factions:2.14.0")
     compileOnly("com.massivecraft:Factions:1.6.9.5-U0.6.8") {
         exclude("com.darkblade12")
