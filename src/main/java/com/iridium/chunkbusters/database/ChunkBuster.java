@@ -155,9 +155,12 @@ public class ChunkBuster {
                    
                     if (IridiumChunkBusters.getInstance().getConfiguration().onlyRestoreWhenBlockIsAir && !block.getType().equals(Material.AIR))
                         continue;
+
+                    block.setType(chunkLayer.blocks[x][z],false);
                     BlockState blockState = block.getState();
-                    block.setType(chunkLayer.blocks[x][z]);
-                    blockState.setRawData(chunkLayer.data[x][z]);
+                    blockState.setType(chunkLayer.blocks[x][z]);
+                    blockState.getData().setData(chunkLayer.data[x][z]);
+                    //blockState.setRawData(chunkLayer.data[x][z]);
                     blockState.update(true, false);
                 }
             }
