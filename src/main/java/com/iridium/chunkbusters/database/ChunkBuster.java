@@ -11,6 +11,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -114,11 +115,12 @@ public class ChunkBuster {
             for (int x = cx; x < cx + 16; x++) {
                 for (int z = cz; z < cz + 16; z++) {
                     Location location = new Location(world, x, y, z);
-                    BlockState blockState = location.getBlock().getState();
+                    Block block = location.getBlock();
+                    BlockState blockState = block.getState();
                     if (IridiumChunkBusters.getInstance().getConfiguration().blacklist.contains(XMaterial.matchXMaterial(blockState.getType())) || !IridiumChunkBusters.getInstance().getSupport().canDelete(player, location) || blockState.getType().equals(Material.AIR) || chunkBusters.contains(location)) {
                         continue;
                     }
-                    chunkLayer.blocks[x - cx][z - cz] = blockState.getType();
+                    chunkLayer.blocks[x - cx][z - cz] = block.getType();
                     chunkLayer.data[x - cx][z - cz] = blockState.getRawData();
                     IridiumChunkBusters.getInstance().getNms().deleteBlockFast(location);
                 }
@@ -149,10 +151,12 @@ public class ChunkBuster {
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
                     if (chunkLayer.blocks[x][z] == null) continue;
-                    BlockState blockState = chunk.getBlock(x, y, z).getState();
-                    if (IridiumChunkBusters.getInstance().getConfiguration().onlyRestoreWhenBlockIsAir && !blockState.getType().equals(Material.AIR))
+                    Block block=chunk.getBlock(x, y, z);
+                   
+                    if (IridiumChunkBusters.getInstance().getConfiguration().onlyRestoreWhenBlockIsAir && !block.getType().equals(Material.AIR))
                         continue;
-                    blockState.setType(chunkLayer.blocks[x][z]);
+                    BlockState blockState = block.getState();
+                    block.setType(chunkLayer.blocks[x][z]);
                     blockState.setRawData(chunkLayer.data[x][z]);
                     blockState.update(true, false);
                 }
