@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.iridium"
-version = "1.0.7"
+version = "1.0.8"
 description = "IridiumChunkBusters"
 
 repositories {
@@ -27,7 +27,7 @@ repositories {
 dependencies {
     // Dependencies that we want to shade in
     implementation("org.jetbrains:annotations:22.0.0")
-    implementation("com.iridium:IridiumCore:1.6.6")
+    implementation("com.iridium:IridiumCore:1.6.7")
     implementation("org.bstats:bstats-bukkit:3.0.0")
     implementation("com.j256.ormlite:ormlite-core:6.1")
     implementation("com.j256.ormlite:ormlite-jdbc:6.1")

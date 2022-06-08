@@ -2,3 +2,6 @@
 .idea/
 .gradle/
 build/
+*.class
+.vscode
+bin
