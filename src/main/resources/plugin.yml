@@ -1,5 +1,5 @@
 name: IridiumChunkBusters
-version: 1.0.3
+version: 1.0.8
 description: A  plugin for removing chunks
 main: com.iridium.chunkbusters.IridiumChunkBusters
 api-version: '1.13'
