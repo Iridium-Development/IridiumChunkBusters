@@ -20,8 +20,7 @@ repositories {
     maven("https://moyskleytech.com/debian/m2/")
     mavenLocal()
     mavenCentral()
-    //maven("https://nexus.iridiumdevelopment.net/repository/maven-releases/")
-
+    maven("https://nexus.iridiumdevelopment.net/repository/maven-releases/")
 }
 
 dependencies {
