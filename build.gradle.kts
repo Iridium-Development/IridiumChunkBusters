@@ -32,7 +32,7 @@ dependencies {
 
     // Other dependencies that are not required or already available at runtime
     compileOnly("org.projectlombok:lombok:1.18.30")
-    compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
 
     // Enable lombok annotation processing
     annotationProcessor("org.projectlombok:lombok:1.18.30")
