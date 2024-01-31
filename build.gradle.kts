@@ -31,11 +31,11 @@ dependencies {
     implementation("de.jeff_media:SpigotUpdateChecker:1.3.2")
 
     // Other dependencies that are not required or already available at runtime
-    compileOnly("org.projectlombok:lombok:1.18.22")
+    compileOnly("org.projectlombok:lombok:1.18.30")
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
 
     // Enable lombok annotation processing
-    annotationProcessor("org.projectlombok:lombok:1.18.20")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
 }
 
 tasks {
