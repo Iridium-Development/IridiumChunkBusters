@@ -73,12 +73,15 @@ tasks {
         // Always re-run this task
         outputs.upToDateWhen { false }
     }
-}
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(8))
-        vendor.set(JvmVendorSpec.ADOPTOPENJDK)
+    compileJava {
+        sourceCompatibility = JavaVersion.VERSION_1_8.toString()
+        targetCompatibility = JavaVersion.VERSION_1_8.toString()
+    }
+
+    compileTestJava {
+        sourceCompatibility = JavaVersion.VERSION_17.toString()
+        targetCompatibility = JavaVersion.VERSION_17.toString()
     }
 }
 
