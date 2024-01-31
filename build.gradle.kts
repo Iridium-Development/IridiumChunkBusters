@@ -24,7 +24,7 @@ repositories {
 dependencies {
     // Dependencies that we want to shade in
     implementation("org.jetbrains:annotations:22.0.0")
-    implementation("com.iridium:IridiumCore:1.5.3")
+    implementation("com.iridium:IridiumCore:1.8.6")
     implementation("org.bstats:bstats-bukkit:3.0.0")
     implementation("com.j256.ormlite:ormlite-core:6.1")
     implementation("com.j256.ormlite:ormlite-jdbc:6.1")
@@ -33,14 +33,6 @@ dependencies {
     // Other dependencies that are not required or already available at runtime
     compileOnly("org.projectlombok:lombok:1.18.22")
     compileOnly("org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT")
-    compileOnly("net.prosavage:FactionsX:1.2")
-    compileOnly("com.massivecraft.massivesuper:MassiveSuper:2.14.0")
-    compileOnly("com.massivecraft.massivesuper:Factions:2.14.0")
-    compileOnly("com.massivecraft:Factions:1.6.9.5-U0.6.8") {
-        exclude("com.darkblade12")
-        exclude("org.kitteh")
-    }
-    compileOnly("com.github.TownyAdvanced:Towny:0.96.7.0")
 
     // Enable lombok annotation processing
     annotationProcessor("org.projectlombok:lombok:1.18.20")
