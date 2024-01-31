@@ -90,14 +90,6 @@ public class IridiumChunkBusters extends IridiumCore {
     }
 
     public Support getSupport() {
-        if (Bukkit.getPluginManager().isPluginEnabled("FactionsX")) return new FactionsX();
-        if (Bukkit.getPluginManager().isPluginEnabled("Factions")) {
-            if (Bukkit.getServer().getPluginManager().getPlugin("Factions").getDescription().getAuthors().contains("drtshock")) {
-                return new FactionsUUID();
-            } else {
-                return new Factions();
-            }
-        }
         return new Default();
     }
 
