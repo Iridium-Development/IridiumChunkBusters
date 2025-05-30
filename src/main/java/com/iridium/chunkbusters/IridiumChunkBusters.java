@@ -13,7 +13,7 @@ import com.iridium.chunkbusters.listeners.InventoryClickListener;
 import com.iridium.chunkbusters.listeners.PlayerInteractListener;
 import com.iridium.chunkbusters.support.*;
 import com.iridium.iridiumcore.IridiumCore;
-import com.iridium.iridiumcore.dependencies.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.NBT;
 import com.iridium.iridiumcore.utils.ItemStackUtils;
 import com.iridium.iridiumcore.utils.Placeholder;
 import lombok.Getter;
@@ -95,15 +95,20 @@ public class IridiumChunkBusters extends IridiumCore {
 
     public ItemStack getChunkBuster(int size) {
         ItemStack itemStack = ItemStackUtils.makeItem(IridiumChunkBusters.getInstance().getConfiguration().chunkBuster, Collections.singletonList(new Placeholder("size", String.valueOf(size * 2 - 1))));
-        NBTItem nbtItem = new NBTItem(itemStack);
-        nbtItem.setInteger("IridiumChunkBuster", size);
-        return nbtItem.getItem();
+
+        NBT.modify(itemStack, readWriteItemNBT -> {
+            readWriteItemNBT.resolveOrCreateCompound("IridiumChunkBuster").setInteger("size", size);
+        });
+
+        return itemStack;
     }
 
     public int getChunkBusterSize(ItemStack itemStack) {
         if (itemStack == null || itemStack.getType() == Material.AIR) return 0;
-        NBTItem nbtItem = new NBTItem(itemStack);
-        return nbtItem.hasKey("IridiumChunkBuster") ? nbtItem.getInteger("IridiumChunkBuster") : 0;
+
+        return NBT.get(itemStack, readableItemNBT -> {
+            return readableItemNBT.resolveOrDefault("IridiumChunkBuster.size", 0);
+        });
     }
 
     @Override

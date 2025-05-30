@@ -1,11 +1,11 @@
 plugins {
     java
     `maven-publish`
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.github.goooler.shadow") version "8.1.8"
 }
 
 group = "com.iridium"
-version = "1.0.7"
+version = "1.0.9"
 description = "IridiumChunkBusters"
 
 repositories {
@@ -17,14 +17,14 @@ repositories {
     maven("https://nexus.iridiumdevelopment.net/repository/maven-releases/")
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://repo.rosewooddev.io/repository/public/")
-    maven("https://hub.jeff-media.com/nexus/repository/jeff-media-public/")
+    maven("https://repo.jeff-media.com/public/")
     mavenCentral()
 }
 
 dependencies {
     // Dependencies that we want to shade in
     implementation("org.jetbrains:annotations:26.0.1")
-    implementation("com.iridium:IridiumCore:2.0.8.8")
+    implementation("com.iridium:IridiumCore:2.0.9")
     implementation("org.bstats:bstats-bukkit:3.1.0")
     implementation("com.j256.ormlite:ormlite-core:6.1")
     implementation("com.j256.ormlite:ormlite-jdbc:6.1")
@@ -46,14 +46,29 @@ tasks {
     }
 
     shadowJar {
+        fun relocate(origin: String) =
+            relocate(origin, "com.iridium.iridiumchunkbusters.dependencies${origin.substring(origin.lastIndexOf('.'))}")
+
         // Remove the archive classifier suffix
         archiveClassifier.set("")
 
         // Relocate dependencies
-        relocate("com.fasterxml.jackson", "com.iridium.iridiumchunkbusters.dependencies.fasterxml")
-        relocate("com.j256.ormlite", "com.iridium.iridiumchunkbusters.dependencies.ormlite")
-        relocate("org.bstats", "com.iridium.iridiumchunkbusters.dependencies.bstats")
-        relocate("de.jeff_media", "com.iridium.iridiumchunkbusters.dependencies")
+        relocate("com.iridium.iridiumcore")
+        relocate("com.j256.ormlite")
+        relocate("de.jeff_media.updatechecker")
+        relocate("org.bstats")
+        relocate("org.intellij.lang.annotations")
+        relocate("org.jetbrains.annotations")
+        relocate("org.jnbt")
+
+        // Relocate IridiumCore dependencies
+        relocate("de.tr7zw.changeme.nbtapi")
+        relocate("com.iridium.iridiumcolorapi")
+        relocate("org.yaml.snakeyaml")
+        relocate("io.papermc.lib")
+        relocate("com.cryptomorin.xseries")
+        relocate("com.fasterxml.jackson")
+        relocate("org.apache.commons")
 
         // Remove unnecessary files from the jar
         minimize()
