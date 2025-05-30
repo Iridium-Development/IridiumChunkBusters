@@ -3,7 +3,7 @@ package com.iridium.chunkbusters.database;
 import com.iridium.chunkbusters.ChunkLayer;
 import com.iridium.chunkbusters.IridiumChunkBusters;
 import com.iridium.chunkbusters.gui.ConfirmationGUI;
-import com.iridium.iridiumcore.dependencies.xseries.XMaterial;
+import com.cryptomorin.xseries.XMaterial;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
