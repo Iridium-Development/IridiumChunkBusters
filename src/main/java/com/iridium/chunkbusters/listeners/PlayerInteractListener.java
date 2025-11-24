@@ -10,11 +10,9 @@ public class PlayerInteractListener implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (event.getClickedBlock() != null) {
-            boolean isChunkBuster = IridiumChunkBusters.getInstance().getConfirmationGUIS().stream().anyMatch(confirmationGUI -> confirmationGUI.getLocation().equals(event.getClickedBlock().getLocation()));
-            if (isChunkBuster) {
-                event.setCancelled(true);
-            }
-        }
+            boolean isChunkBuster = IridiumChunkBusters.getInstance().getConfirmationGUIS().stream().anyMatch(
+                    confirmationGUI -> confirmationGUI.getLocation()
+                            .equals(event.getClickedBlock().getLocation()));
     }
 
 }

@@ -85,8 +85,8 @@ public class ChunkBuster {
                 chunks.add(chunk);
             }
         }
-        int minheight = XMaterial.getVersion() >= 17 ? c.getWorld().getMinHeight() : 0;
-        Bukkit.getScheduler().runTask(IridiumChunkBusters.getInstance(), () -> deleteChunks(chunks, minheight));
+        int minHeight = XMaterial.getVersion() >= 17 ? c.getWorld().getMinHeight() : 0;
+        Bukkit.getScheduler().runTask(IridiumChunkBusters.getInstance(), () -> deleteChunks(chunks, minHeight));
         IridiumChunkBusters.getInstance().getActiveChunkBusters().add(this);
     }
 
@@ -115,9 +115,16 @@ public class ChunkBuster {
                 for (int z = cz; z < cz + 16; z++) {
                     Location location = new Location(world, x, y, z);
                     BlockState blockState = location.getBlock().getState();
-                    if (IridiumChunkBusters.getInstance().getConfiguration().blacklist.contains(XMaterial.matchXMaterial(blockState.getType())) || !IridiumChunkBusters.getInstance().getSupport().canDelete(player, location) || blockState.getType().equals(Material.AIR) || chunkBusters.contains(location)) {
-                        continue;
-                    }
+                    if (IridiumChunkBusters.getInstance().getConfiguration()
+                            .blacklist.contains(XMaterial.matchXMaterial(blockState.getType()))
+                            || !IridiumChunkBusters.getInstance().getSupport().canDelete(player, location)
+                            || blockState.getType().equals(Material.AIR)
+                            || (XMaterial.getVersion() == 13 && blockState.getType().equals(Material.CAVE_AIR))
+                            || (XMaterial.getVersion() == 13 && blockState.getType().equals(Material.VOID_AIR))
+                            || chunkBusters.contains(location)) {
+                                continue;
+                            }
+                                
                     chunkLayer.blocks[x - cx][z - cz] = blockState.getType();
                     chunkLayer.data[x - cx][z - cz] = blockState.getRawData();
                     IridiumChunkBusters.getInstance().getNms().deleteBlockFast(location);
@@ -150,8 +157,12 @@ public class ChunkBuster {
                 for (int z = 0; z < 16; z++) {
                     if (chunkLayer.blocks[x][z] == null) continue;
                     BlockState blockState = chunk.getBlock(x, y, z).getState();
-                    if (IridiumChunkBusters.getInstance().getConfiguration().onlyRestoreWhenBlockIsAir && !blockState.getType().equals(Material.AIR))
-                        continue;
+                    if (IridiumChunkBusters.getInstance().getConfiguration().onlyRestoreWhenBlockIsAir
+                            && !(blockState.getType().equals(Material.AIR)
+                            || (XMaterial.getVersion() == 13 && blockState.getType().equals(Material.CAVE_AIR))
+                            || (XMaterial.getVersion() == 13 && blockState.getType().equals(Material.VOID_AIR)))) {
+                                continue;
+                            }
                     blockState.setType(chunkLayer.blocks[x][z]);
                     byte rawData = chunkLayer.data[x][z];
                     if(rawData != 0){
