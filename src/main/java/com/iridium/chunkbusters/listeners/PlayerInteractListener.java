@@ -13,6 +13,7 @@ public class PlayerInteractListener implements Listener {
             boolean isChunkBuster = IridiumChunkBusters.getInstance().getConfirmationGUIS().stream().anyMatch(
                     confirmationGUI -> confirmationGUI.getLocation()
                             .equals(event.getClickedBlock().getLocation()));
+            if (isChunkBuster) { event.setCancelled(true); }
+        }
     }
-
 }

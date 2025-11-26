@@ -13,6 +13,7 @@ public class Configuration {
     public String confirmationGUITitle = "&7Are you sure?";
     public String actionBarMessage = "&e&lY-Level: %ylevel%";
     public String dateTimeFormat = "EEEE, MMMM dd HH:mm:ss";
+    public boolean patreonMessage = true;
 
     public boolean startYWherePlaced = true;
     public boolean restoreChunkBusters = true;

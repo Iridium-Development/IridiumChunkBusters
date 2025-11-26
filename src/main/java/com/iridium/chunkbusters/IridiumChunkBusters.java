@@ -11,6 +11,7 @@ import com.iridium.chunkbusters.gui.ConfirmationGUI;
 import com.iridium.chunkbusters.listeners.BlockPlaceListener;
 import com.iridium.chunkbusters.listeners.InventoryClickListener;
 import com.iridium.chunkbusters.listeners.PlayerInteractListener;
+import com.iridium.chunkbusters.listeners.PlayerJoinListener;
 import com.iridium.chunkbusters.support.*;
 import com.iridium.iridiumcore.IridiumCore;
 import de.tr7zw.changeme.nbtapi.NBT;
@@ -24,6 +25,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -95,6 +97,7 @@ public class IridiumChunkBusters extends IridiumCore {
         Bukkit.getPluginManager().registerEvents(new BlockPlaceListener(), this);
         Bukkit.getPluginManager().registerEvents(new InventoryClickListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerInteractListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
     }
 
     public Support getSupport() {
