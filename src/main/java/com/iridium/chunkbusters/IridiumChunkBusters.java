@@ -11,6 +11,7 @@ import com.iridium.chunkbusters.gui.ConfirmationGUI;
 import com.iridium.chunkbusters.listeners.BlockPlaceListener;
 import com.iridium.chunkbusters.listeners.InventoryClickListener;
 import com.iridium.chunkbusters.listeners.PlayerInteractListener;
+import com.iridium.chunkbusters.listeners.PlayerJoinListener;
 import com.iridium.chunkbusters.support.*;
 import com.iridium.iridiumcore.IridiumCore;
 import de.tr7zw.changeme.nbtapi.NBT;
@@ -24,12 +25,14 @@ import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 @Getter
 public class IridiumChunkBusters extends IridiumCore {
 
+    @Getter
     private static IridiumChunkBusters instance;
     private DatabaseManager databaseManager;
 
@@ -55,7 +58,14 @@ public class IridiumChunkBusters extends IridiumCore {
         try {
             this.databaseManager = new DatabaseManager();
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            // We don't want the plugin to start if the connection fails
+            IridiumChunkBusters.getInstance().getLogger().severe(
+                    "SQL Exception: "
+                         + throwables.getMessage()
+                         + "\n" + Arrays.toString(throwables.getStackTrace()));
+
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
         }
         this.support = getSupport();
         databaseManager.getChunkBusters().thenAccept(chunkBusters -> chunkBusters.stream().filter(chunkBuster -> chunkBuster.getY() != 0).forEach(ChunkBuster::deleteChunks));
@@ -87,6 +97,7 @@ public class IridiumChunkBusters extends IridiumCore {
         Bukkit.getPluginManager().registerEvents(new BlockPlaceListener(), this);
         Bukkit.getPluginManager().registerEvents(new InventoryClickListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerInteractListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
     }
 
     public Support getSupport() {
@@ -114,9 +125,5 @@ public class IridiumChunkBusters extends IridiumCore {
     @Override
     public void saveData() {
         activeChunkBusters.forEach(chunkBuster -> databaseManager.saveChunkBuster(chunkBuster));
-    }
-
-    public static IridiumChunkBusters getInstance() {
-        return instance;
     }
 }

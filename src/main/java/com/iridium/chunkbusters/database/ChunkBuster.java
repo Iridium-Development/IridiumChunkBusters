@@ -59,6 +59,16 @@ public class ChunkBuster {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault());
     }
 
+    public List<Material> getAir() {
+        List<Material> airBlocks = new ArrayList<>();
+        if(XMaterial.getVersion() >= 13) {
+            airBlocks.add(Material.CAVE_AIR);
+            airBlocks.add(Material.VOID_AIR);
+        }
+        airBlocks.add(Material.AIR);
+        return airBlocks;
+    }
+
     public Chunk getChunk() {
         String[] coords = chunk.split(",");
         World world = Bukkit.getWorld(coords[0]);
@@ -85,8 +95,8 @@ public class ChunkBuster {
                 chunks.add(chunk);
             }
         }
-        int minheight = XMaterial.getVersion() >= 17 ? c.getWorld().getMinHeight() : 0;
-        Bukkit.getScheduler().runTask(IridiumChunkBusters.getInstance(), () -> deleteChunks(chunks, minheight));
+        int minHeight = XMaterial.getVersion() >= 17 ? c.getWorld().getMinHeight() : 0;
+        Bukkit.getScheduler().runTask(IridiumChunkBusters.getInstance(), () -> deleteChunks(chunks, minHeight));
         IridiumChunkBusters.getInstance().getActiveChunkBusters().add(this);
     }
 
@@ -101,7 +111,8 @@ public class ChunkBuster {
             return;
         }
         if (player != null) {
-//            IridiumChunkBusters.getInstance().getNms().sendActionBar(player, StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().actionBarMessage.replace("{ylevel}", String.valueOf(y))));
+            // Seemingly removed from IridiumCore?
+            // IridiumChunkBusters.getInstance().getNms().sendActionBar(player, StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().actionBarMessage.replace("{ylevel}", String.valueOf(y))));
         }
         HashSet<Location> chunkBusters = IridiumChunkBusters.getInstance().getConfirmationGUIS().stream().map(ConfirmationGUI::getLocation).collect(Collectors.toCollection(HashSet::new));
         for (Chunk c : chunks) {
@@ -115,9 +126,14 @@ public class ChunkBuster {
                 for (int z = cz; z < cz + 16; z++) {
                     Location location = new Location(world, x, y, z);
                     BlockState blockState = location.getBlock().getState();
-                    if (IridiumChunkBusters.getInstance().getConfiguration().blacklist.contains(XMaterial.matchXMaterial(blockState.getType())) || !IridiumChunkBusters.getInstance().getSupport().canDelete(player, location) || blockState.getType().equals(Material.AIR) || chunkBusters.contains(location)) {
-                        continue;
-                    }
+                    if (IridiumChunkBusters.getInstance().getConfiguration()
+                            .blacklist.contains(XMaterial.matchXMaterial(blockState.getType()))
+                            || !IridiumChunkBusters.getInstance().getSupport().canDelete(player, location)
+                            || getAir().contains(blockState.getType())
+                            || chunkBusters.contains(location)) {
+                                continue;
+                            }
+                                
                     chunkLayer.blocks[x - cx][z - cz] = blockState.getType();
                     chunkLayer.data[x - cx][z - cz] = blockState.getRawData();
                     IridiumChunkBusters.getInstance().getNms().deleteBlockFast(location);
@@ -141,7 +157,8 @@ public class ChunkBuster {
             return;
         }
         if (player != null) {
-//            IridiumChunkBusters.getInstance().getNms().sendActionBar(player, StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().actionBarMessage.replace("{ylevel}", String.valueOf(y))));
+            // Seemingly removed from IridiumCore?
+            // IridiumChunkBusters.getInstance().getNms().sendActionBar(player, StringUtils.color(IridiumChunkBusters.getInstance().getConfiguration().actionBarMessage.replace("{ylevel}", String.valueOf(y))));
         }
         blockDataList.stream().filter(bd -> bd.getY() == y).forEach(blockData -> {
             Chunk chunk = blockData.getChunk();
@@ -150,8 +167,10 @@ public class ChunkBuster {
                 for (int z = 0; z < 16; z++) {
                     if (chunkLayer.blocks[x][z] == null) continue;
                     BlockState blockState = chunk.getBlock(x, y, z).getState();
-                    if (IridiumChunkBusters.getInstance().getConfiguration().onlyRestoreWhenBlockIsAir && !blockState.getType().equals(Material.AIR))
-                        continue;
+                    if (IridiumChunkBusters.getInstance().getConfiguration().onlyRestoreWhenBlockIsAir
+                            && !getAir().contains(blockState.getType())) {
+                                continue;
+                            }
                     blockState.setType(chunkLayer.blocks[x][z]);
                     byte rawData = chunkLayer.data[x][z];
                     if(rawData != 0){
@@ -168,5 +187,4 @@ public class ChunkBuster {
             Bukkit.getScheduler().runTaskLater(IridiumChunkBusters.getInstance(), this::undo, IridiumChunkBusters.getInstance().getConfiguration().deleteInterval);
         }
     }
-
 }
